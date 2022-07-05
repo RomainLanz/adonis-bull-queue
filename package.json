@@ -12,17 +12,20 @@
   "author": "Romain Lanz <romain.lanz@setten.io>",
   "main": "build/providers/QueueProvider.js",
   "files": [
-    "build/providers",
+    "build/adonis-typings",
     "build/commands",
+    "build/providers",
     "build/src",
+    "build/templates",
     "build/instructions.js",
     "build/instructions.md"
   ],
   "typings": "./build/adonis-typings/index.d.ts",
   "scripts": {
-    "build":  "npm run clean && npm run build-only",
+    "build": "npm run clean && npm run build-only && npm run copyfiles",
     "build-only": "tsc",
     "clean": "del-cli build",
+    "copyfiles": "copyfiles \"templates/**/*.txt\" \"instructions.md\" build",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
@@ -32,6 +35,7 @@
     "@adonisjs/application": "^5.2.5",
     "@adonisjs/core": "^5.8.4",
     "@adonisjs/sink": "^5.3.2",
+    "copyfiles": "^2.4.1",
     "del-cli": "^4.0.1",
     "eslint": "^8.19.0",
     "prettier": "^2.7.1",
