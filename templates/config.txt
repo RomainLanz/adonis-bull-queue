@@ -18,3 +18,5 @@ const queueConfig: QueueConfig = {
 		attempts: 3,
 	}
 }
+
+export default queueConfig
