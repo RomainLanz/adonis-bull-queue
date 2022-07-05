@@ -2,21 +2,21 @@ import Env from '@ioc:Adonis/Core/Env'
 import type { QueueConfig } from '@ioc:Setten/Queue'
 
 const queueConfig: QueueConfig = {
-	connection: {
-		host: Env.get('QUEUE_REDIS_HOST'),
-		port: Env.get('QUEUE_REDIS_PORT'),
-		password: Env.get('QUEUE_REDIS_PASSWORD'),
-	},
+  connection: {
+    host: Env.get('QUEUE_REDIS_HOST'),
+    port: Env.get('QUEUE_REDIS_PORT'),
+    password: Env.get('QUEUE_REDIS_PASSWORD'),
+  },
 
-	queue: {
-		prefix: 'queue:',
-	},
+  queue: {
+    prefix: 'queue:',
+  },
 
-	worker: {},
+  worker: {},
 
-	jobs: {
-		attempts: 3,
-	}
+  jobs: {
+    attempts: 3,
+  }
 }
 
 export default queueConfig
