@@ -1,5 +1,11 @@
+/**
+ * @setten/bull-queue
+ *
+ * @license MIT
+ * @copyright Setten - Romain Lanz <romain.lanz@setten.io>
+ */
+
 import { BaseCommand } from '@adonisjs/core/build/standalone';
-import { Queue } from '@ioc:Setten/Queue';
 
 export default class QueueListener extends BaseCommand {
 	public static commandName = 'queue:listen';
@@ -11,6 +17,8 @@ export default class QueueListener extends BaseCommand {
 	};
 
 	public async run() {
+		const Queue = this.application.container.resolveBinding('Setten/Queue');
+
 		await Queue.process();
 	}
 }
