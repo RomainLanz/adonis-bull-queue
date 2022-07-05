@@ -17,7 +17,7 @@ export default class QueueListener extends BaseCommand {
 	};
 
 	public async run() {
-		const Queue = this.application.container.resolveBinding('Setten/Queue');
+		const { Queue } = this.application.container.resolveBinding('Setten/Queue');
 
 		await Queue.process();
 	}

@@ -6,7 +6,7 @@ const queueConfig: QueueConfig = {
 		host: Env.get('QUEUE_REDIS_HOST'),
 		port: Env.get('QUEUE_REDIS_PORT'),
 		password: Env.get('QUEUE_REDIS_PASSWORD'),
-	}
+	},
 
 	queue: {
 		prefix: 'queue:',
