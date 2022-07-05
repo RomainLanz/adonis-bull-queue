@@ -1,0 +1,67 @@
+{
+  "name": "@setten/bull-queue",
+  "version": "0.1.0",
+  "description": "",
+  "homepage": "https://github.com/setten-io/adonis-bull-queue#readme",
+  "license": "MIT",
+  "keywords": [
+    "adonisjs",
+    "bullmq",
+    "queue"
+  ],
+  "author": "Romain Lanz <romain.lanz@setten.io>",
+  "main": "build/providers/QueueProvider.js",
+  "files": [
+    "build/providers",
+    "build/commands",
+    "build/src",
+    "build/instructions.js",
+    "build/instructions.md"
+  ],
+  "typings": "./build/adonis-typings/index.d.ts",
+  "scripts": {
+    "build":  "npm run clean && npm run build-only",
+    "build-only": "tsc",
+    "clean": "del-cli build",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "bullmq": "^1.86.4"
+  },
+  "devDependencies": {
+    "@adonisjs/application": "^5.2.5",
+    "@adonisjs/core": "^5.8.4",
+    "@adonisjs/sink": "^5.3.2",
+    "del-cli": "^4.0.1",
+    "eslint": "^8.19.0",
+    "prettier": "^2.7.1",
+    "typescript": "^4.7.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/setten-io/adonis-bull-queue.git"
+  },
+  "bugs": {
+    "url": "https://github.com/setten-io/adonis-bull-queue/issues"
+  },
+  "adonisjs": {
+    "instructions": "./build/instructions.js",
+    "instructionsMd": "./build/instructions.md",
+    "types": "@setten/bull-queue",
+    "providers": [
+      "@setten/bull-queue"
+    ],
+    "commands": [
+      "@setten/bull-queue/build/commands"
+    ]
+  },
+  "prettier": {
+    "arrowParens": "always",
+    "printWidth": 100,
+    "quoteProps": "consistent",
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "useTabs": true
+  }
+}
