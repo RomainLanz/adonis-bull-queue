@@ -8,9 +8,7 @@ const queueConfig: QueueConfig = {
     password: Env.get('QUEUE_REDIS_PASSWORD'),
   },
 
-  queue: {
-    prefix: 'queue:',
-  },
+  queue: {},
 
   worker: {},
 
