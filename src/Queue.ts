@@ -38,9 +38,10 @@ export class BullManager {
 		new Worker(
 			'default',
 			async (job) => {
-				const jobHandler = this.app.container.make(job.name);
-
-				if (!jobHandler) {
+				let jobHandler;
+				try {
+					jobHandler = this.app.container.make(job.name);
+				} catch (e) {
 					this.logger.error(`Job handler for ${job.name} not found`);
 					return;
 				}
