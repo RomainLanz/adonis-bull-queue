@@ -16,7 +16,7 @@ declare module '@ioc:Setten/Queue' {
 	};
 
 	interface QueueContract {
-		dispatch(job: string, payload: Record<string, unknown>, options: JobsOptions): Promise<string>;
+		dispatch(job: string, payload: Record<string, unknown>, options?: JobsOptions): Promise<string>;
 		process(): Promise<void>;
 	}
 
