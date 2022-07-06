@@ -1,6 +1,6 @@
 {
   "name": "@setten/bull-queue",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "",
   "homepage": "https://github.com/setten-io/adonis-bull-queue#readme",
   "license": "MIT",
