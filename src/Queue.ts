@@ -25,7 +25,7 @@ export class BullManager {
 		});
 	}
 
-	public dispatch(job: string, payload: Record<string, unknown>, options: JobsOptions = {}) {
+	public dispatch<D = Record<string, unknown>>(job: string, payload: D, options: JobsOptions = {}) {
 		return this.queue.add(job, payload, {
 			...this.options.jobs,
 			...options,
