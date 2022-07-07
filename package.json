@@ -61,7 +61,16 @@
     ],
     "commands": [
       "@setten/bull-queue/build/commands"
-    ]
+    ],
+    "templates": {
+      "basePath": "./build/templates",
+      "contracts": [
+        {
+          "src": "contract.txt",
+          "dest": "queue"
+        }
+      ]
+    }
   },
   "prettier": {
     "arrowParens": "always",

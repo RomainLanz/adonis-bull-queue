@@ -64,3 +64,15 @@ node ace queue:listen
 ```
 
 Once done, you will see the message `Queue processing started`.
+
+## Typings
+
+You can define the payload's type for a given job inside the `contracts/queue.ts` file.
+
+```ts
+declare module '@ioc:Setten/Queue' {
+  interface JobsList {
+    'App/Jobs/RegisterStripeCustomer': { userId: string };
+  }
+}
+```
