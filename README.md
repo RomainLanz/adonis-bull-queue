@@ -7,6 +7,10 @@
 `@setten/bull-queue` is a queue system based on [BullMQ](https://github.com/taskforcesh/bullmq)
 for [AdonisJS](https://adonisjs.com/).
 
+> **Note**
+>
+> You must have a Redis server running on your machine.
+
 ---
 
 ## Getting Started
@@ -23,20 +27,21 @@ Next, configure the package by running the following command.
 node ace configure @setten/bull-queue
 ```
 
+and... Voilà!
+
 ## Usage
 
 The `Queue` provider gives you access to the `dispatch` method.
 It will dispatch the linked job to the queue with the given payload.
 
 ```ts
-import {Queue} from '@ioc:Setten/Queue';
+import { Queue } from '@ioc:Setten/Queue';
 
 Queue.dispatch('App/Jobs/RegisterStripeCustomer', {...});
 ```
 
-> **Note**: There is currently no typing support for job payloads.
-
-Your job can be stored anywhere in your application and is dispatched using its full path.
+Your `Job` can be stored anywhere in your application and is dispatched using its full path.
+It must have a `handle` method that will be executed by the queue worker.
 
 ```ts
 // app/Jobs/RegisterStripeCustomer.ts
@@ -51,3 +56,11 @@ export default class RegisterStripeCustomer {
   }
 }
 ```
+
+Run the queue worker with the following ace command:
+
+```bash
+node ace queue:listen
+```
+
+Once done, you will see the message `Queue processing started`.
