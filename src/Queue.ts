@@ -9,7 +9,7 @@ import { Queue, Worker } from 'bullmq';
 import type { JobsOptions } from 'bullmq';
 import type { LoggerContract } from '@ioc:Adonis/Core/Logger';
 import type { ApplicationContract } from '@ioc:Adonis/Core/Application';
-import type { QueueConfig } from '@ioc:Setten/Queue';
+import type { DataForJob, JobsList, QueueConfig } from '@ioc:Setten/Queue';
 
 export class BullManager {
 	private queue: Queue;
@@ -25,7 +25,11 @@ export class BullManager {
 		});
 	}
 
-	public dispatch(job: string, payload: Record<string, unknown>, options: JobsOptions = {}) {
+	public dispatch<K extends keyof JobsList | string>(
+		job: K,
+		payload: DataForJob<K>,
+		options: JobsOptions = {}
+	) {
 		return this.queue.add(job, payload, {
 			...this.options.jobs,
 			...options,
