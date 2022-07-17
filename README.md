@@ -55,7 +55,7 @@ export type RegisterStripeCustomerPayload = {
 }
 
 export default class RegisterStripeCustomer {
-  public async handle(payload: JobPayload) {
+  public async handle(payload: RegisterStripeCustomerPayload) {
     // ...
   }
 }
