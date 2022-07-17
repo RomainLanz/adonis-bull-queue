@@ -1,4 +1,8 @@
 <p align="center">
+  <img src="https://user-images.githubusercontent.com/2793951/179391203-e56db661-cc73-4932-aa77-b63be650c131.png" alt="@setten/bull-queue">
+</p>
+
+<p align="center">
   <a href="https://www.npmjs.com/package/@setten/bull-queue"><img src="https://img.shields.io/npm/dm/@setten/bull-queue.svg?style=flat-square" alt="Download"></a>
   <a href="https://www.npmjs.com/package/@setten/bull-queue"><img src="https://img.shields.io/npm/v/@setten/bull-queue.svg?style=flat-square" alt="Version"></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/npm/l/@setten/bull-queue.svg?style=flat-square" alt="License"></a>
