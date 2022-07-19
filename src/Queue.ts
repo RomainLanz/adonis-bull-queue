@@ -12,35 +12,44 @@ import type { ApplicationContract } from '@ioc:Adonis/Core/Application';
 import type { DataForJob, JobsList, QueueConfig } from '@ioc:Setten/Queue';
 
 export class BullManager {
-	private queue: Queue;
+	private queues: Map<string, Queue> = new Map();
 
 	constructor(
 		private options: QueueConfig,
 		private logger: LoggerContract,
 		private app: ApplicationContract
 	) {
-		this.queue = new Queue('default', {
+		this.queues.set("default", new Queue('default', {
 			connection: this.options.connection,
 			...this.options.queue,
-		});
+		}))
 	}
 
 	public dispatch<K extends keyof JobsList | string>(
 		job: K,
 		payload: DataForJob<K>,
-		options: JobsOptions = {}
+		options: JobsOptions & { queueName?: string } = {},
 	) {
-		return this.queue.add(job, payload, {
+		const queueName = options.queueName || 'default';
+		
+		if (!this.queues.has(queueName)) {
+			this.queues.set(queueName, new Queue(queueName, {
+				connection: this.options.connection,
+				...this.options.queue,
+			}))
+		}
+
+		return this.queues.get(queueName)!.add(job, payload, {
 			...this.options.jobs,
 			...options,
 		});
 	}
 
-	public process() {
-		this.logger.info('Queue processing started...');
+	public process({ queueName }: { queueName?: string }) {
+		this.logger.info(`Queue [${queueName || 'default'}] processing started...`);
 
 		new Worker(
-			'default',
+			queueName || 'default',
 			async (job) => {
 				let jobHandler;
 				try {
