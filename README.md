@@ -42,6 +42,11 @@ It will dispatch the linked job to the queue with the given payload.
 import { Queue } from '@ioc:Setten/Queue';
 
 Queue.dispatch('App/Jobs/RegisterStripeCustomer', {...});
+
+
+Queue.dispatch('App/Jobs/RegisterStripeCustomer', {...}, {
+  queueName: 'stripe',
+});
 ```
 
 Your `Job` can be stored anywhere in your application and is dispatched using its full path.
@@ -65,6 +70,10 @@ Run the queue worker with the following ace command:
 
 ```bash
 node ace queue:listen
+
+# or
+
+node ace queue:listen --queue=stripe
 ```
 
 Once done, you will see the message `Queue processing started`.
