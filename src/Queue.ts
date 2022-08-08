@@ -5,7 +5,7 @@
  * @copyright Setten - Romain Lanz <romain.lanz@setten.io>
  */
 
-import { Queue, Worker } from 'bullmq';
+import { Queue, QueueScheduler, Worker } from 'bullmq';
 import type { JobsOptions } from 'bullmq';
 import type { LoggerContract } from '@ioc:Adonis/Core/Logger';
 import type { ApplicationContract } from '@ioc:Adonis/Core/Application';
@@ -19,10 +19,16 @@ export class BullManager {
 		private logger: LoggerContract,
 		private app: ApplicationContract
 	) {
-		this.queues.set("default", new Queue('default', {
+		const defaultQueue = new Queue('default', {
 			connection: this.options.connection,
 			...this.options.queue,
-		}))
+		});
+
+		this.queues.set("default", defaultQueue);
+
+		new QueueScheduler('default', {
+			connection: this.options.connection,
+		});
 	}
 
 	public dispatch<K extends keyof JobsList | string>(
@@ -31,12 +37,16 @@ export class BullManager {
 		options: JobsOptions & { queueName?: string } = {},
 	) {
 		const queueName = options.queueName || 'default';
-		
+
 		if (!this.queues.has(queueName)) {
 			this.queues.set(queueName, new Queue(queueName, {
 				connection: this.options.connection,
 				...this.options.queue,
 			}))
+
+			new QueueScheduler(queueName, {
+				connection: this.options.connection,
+			});
 		}
 
 		return this.queues.get(queueName)!.add(job, payload, {
@@ -67,6 +77,8 @@ export class BullManager {
 				} catch (error) {
 					this.logger.error(`Job ${job.name} failed`);
 					this.logger.error(JSON.stringify(error));
+
+					throw error;
 				}
 			},
 			{
