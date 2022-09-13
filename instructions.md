@@ -3,7 +3,7 @@ The package has been configured successfully. The queue configuration stored ins
 **Open the `env.ts` file and paste the following code inside the `Env.rules` object.**
 
 ```ts
-QUEUE_REDIS_HOST = Env.schema.string({ format: 'host' }),
-QUEUE_REDIS_PORT = Env.schema.number(),
-QUEUE_REDIS_PASSWORD = Env.schema.string(),
+QUEUE_REDIS_HOST: Env.schema.string({ format: 'host' }),
+QUEUE_REDIS_PORT: Env.schema.number(),
+QUEUE_REDIS_PASSWORD: Env.schema.string(),
 ```
