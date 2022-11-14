@@ -29,7 +29,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "bullmq": "^1.86.4"
+    "bullmq": "^3.2.0"
   },
   "devDependencies": {
     "@adonisjs/application": "^5.2.5",
