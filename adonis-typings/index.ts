@@ -7,7 +7,6 @@
 
 declare module '@ioc:Setten/Queue' {
 	import type { ConnectionOptions, WorkerOptions, QueueOptions, JobsOptions } from 'bullmq';
-	import type Config from '@ioc:Adonis/Core/Config';
 
 	export type DataForJob<K extends string> = K extends keyof JobsList
 		? JobsList[K]
