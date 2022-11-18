@@ -6,7 +6,7 @@
  */
 
 declare module '@ioc:Setten/Queue' {
-	import type { ConnectionOptions, WorkerOptions, QueueOptions, JobsOptions } from 'bullmq';
+	import type { ConnectionOptions, WorkerOptions, QueueOptions, JobsOptions, Job } from 'bullmq';
 
 	export type DataForJob<K extends string> = K extends keyof JobsList
 		? JobsList[K]
@@ -37,10 +37,17 @@ declare module '@ioc:Setten/Queue' {
 		process(): Promise<void>;
 	}
 
+	export interface JobHandlerContract {
+		handle(payload: any): Promise<void>
+		failed(): Promise<void>
+	}
+
 	/**
 	 * An interface to define typed queues/jobs
 	 */
 	export interface JobsList {}
 
 	export const Queue: QueueContract;
+
+	export { Job }
 }

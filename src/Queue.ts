@@ -31,7 +31,7 @@ export class BullManager {
 		options: JobsOptions & { queueName?: string } = {},
 	) {
 		const queueName = options.queueName || 'default';
-		
+
 		if (!this.queues.has(queueName)) {
 			this.queues.set(queueName, new Queue(queueName, {
 				connection: this.options.connection,
@@ -48,7 +48,7 @@ export class BullManager {
 	public process({ queueName }: { queueName?: string }) {
 		this.logger.info(`Queue [${queueName || 'default'}] processing started...`);
 
-		new Worker(
+		let worker = new Worker(
 			queueName || 'default',
 			async (job) => {
 				let jobHandler;
@@ -61,19 +61,28 @@ export class BullManager {
 
 				this.logger.info(`Job ${job.name} started`);
 
-				try {
-					await jobHandler.handle(job.data);
-					this.logger.info(`Job ${job.name} finished`);
-				} catch (error) {
-					this.logger.error(`Job ${job.name} failed`);
-					this.logger.error(JSON.stringify(error));
-				}
+				await jobHandler.handle(job.data);
+				this.logger.info(`Job ${job.name} finished`);
 			},
 			{
 				connection: this.options.connection,
 				...this.options.worker,
 			}
 		);
+
+		worker.on('failed', async(job, error) => {
+			if (!job) return
+
+			this.logger.error(`Job ${job.name} failed`);
+			this.logger.error(JSON.stringify(error));
+
+			if (job.attemptsMade === job.opts.attempts) {
+
+        // Call the failed method of the handler class if there is one
+        let jobHandler = this.app.container.make(job.name, [job]);
+				if (typeof jobHandler.failed === 'function') jobHandler.failed()
+      }
+		})
 
 		return this;
 	}

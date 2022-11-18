@@ -5,4 +5,4 @@
  * @copyright Setten - Romain Lanz <romain.lanz@setten.io>
  */
 
-export default ['@setten/bull-queue/build/commands/QueueListener'];
+export default ['@setten/bull-queue/build/commands/QueueListener', '@setten/bull-queue/build/commands/MakeJob'];
