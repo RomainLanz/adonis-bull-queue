@@ -7,10 +7,15 @@
 
 declare module '@ioc:Setten/Queue' {
 	import type { ConnectionOptions, WorkerOptions, QueueOptions, JobsOptions } from 'bullmq';
+	import type Config from '@ioc:Adonis/Core/Config';
 
 	export type DataForJob<K extends string> = K extends keyof JobsList
 		? JobsList[K]
 		: Record<string, unknown>;
+
+	export type DispatchOptions = JobsOptions & {
+		queueName?: 'default' | string
+	}
 
 	export type QueueConfig = {
 		connection: ConnectionOptions;
@@ -23,7 +28,7 @@ declare module '@ioc:Setten/Queue' {
 		dispatch<K extends keyof JobsList>(
 			job: K,
 			payload: DataForJob<K>,
-			options?: JobsOptions
+			options?: DispatchOptions
 		): Promise<string>;
 		dispatch<K extends string>(
 			job: K,
