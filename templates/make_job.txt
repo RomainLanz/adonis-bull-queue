@@ -15,7 +15,6 @@ export default class Test implements JobHandlerContract {
 
   /**
    * This is an optional method that gets called if it exists when the retries has exceeded and is marked failed.
-   * The job instance is accessible from the BaseJob.
    */
   public async failed() {}
 }
