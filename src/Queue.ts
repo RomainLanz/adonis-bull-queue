@@ -70,7 +70,7 @@ export class BullManager {
 			}
 		);
 
-		worker.on('failed', async(job, error) => {
+		worker.on('failed', async (job, error) => {
 			if (!job) return
 
 			this.logger.error(`Job ${job.name} failed`);
@@ -78,10 +78,10 @@ export class BullManager {
 
 			if (job.attemptsMade === job.opts.attempts) {
 
-        // Call the failed method of the handler class if there is one
-        let jobHandler = this.app.container.make(job.name, [job]);
+				// Call the failed method of the handler class if there is one
+				let jobHandler = this.app.container.make(job.name, [job]);
 				if (typeof jobHandler.failed === 'function') jobHandler.failed()
-      }
+			}
 		})
 
 		return this;
