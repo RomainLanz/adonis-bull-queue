@@ -79,7 +79,7 @@ export class BullManager {
 
 				// Call the failed method of the handler class if there is one
 				let jobHandler = this.app.container.make(job.name, [job]);
-				if (typeof jobHandler.failed === 'function') jobHandler.failed()
+				if (typeof jobHandler.failed === 'function') await jobHandler.failed()
 			}
 		})
 
