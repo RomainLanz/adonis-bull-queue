@@ -71,12 +71,11 @@ export class BullManager {
 		);
 
 		worker.on('failed', async (job, error) => {
-			if (!job) return
+			this.logger.error(error.message, [])
 
-			this.logger.error(`Job ${job.name} failed`);
-			this.logger.error(JSON.stringify(error));
-
-			if (job.attemptsMade === job.opts.attempts) {
+			// If removeOnFail is set to true in the job options, job instance may be undefined.
+			// This can occur if worker maxStalledCount has been reached and the removeOnFail is set to true.
+			if (job && (job.attemptsMade === job.opts.attempts || job.finishedOn)) {
 
 				// Call the failed method of the handler class if there is one
 				let jobHandler = this.app.container.make(job.name, [job]);
