@@ -13,7 +13,7 @@ export default class MakeJob extends BaseCommand {
 	public static description = 'Make a new dispatch-able job';
 
 	@args.string({ description: 'Name of the job class' })
-	public name: string;
+	public name!: string;
 
 	public static settings = {
 		loadApp: true,
