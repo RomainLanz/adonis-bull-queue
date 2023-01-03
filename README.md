@@ -64,22 +64,22 @@ Example job file:
 import type { JobHandlerContract, Job } from '@ioc:Setten/Queue';
 
 export type RegisterStripeCustomerPayload = {
-	userId: string;
+  userId: string;
 };
 
 export default class RegisterStripeCustomer implements JobHandlerContract {
-	constructor(public job: Job) {
-		this.job = job;
-	}
+  constructor(public job: Job) {
+    this.job = job;
+  }
 
-	public async handle(payload: RegisterStripeCustomerPayload) {
-		// ...
-	}
+  public async handle(payload: RegisterStripeCustomerPayload) {
+    // ...
+  }
 
-	/**
-	 * This is an optional method that gets called if it exists when the retries has exceeded and is marked failed.
-	 */
-	public async failed() {}
+  /**
+   * This is an optional method that gets called if it exists when the retries has exceeded and is marked failed.
+   */
+  public async failed() {}
 }
 ```
 
@@ -113,8 +113,8 @@ Or... you can also do it per job:
 
 ```ts
 Queue.dispatch('App/Jobs/Somejob', {...}, {
-	attempts: 3,
-	backoff: { type: 'exponential', delay: 5000 }
+  attempts: 3,
+  backoff: { type: 'exponential', delay: 5000 }
 })
 ```
 
@@ -148,8 +148,8 @@ You can define the payload's type for a given job inside the `contracts/queue.ts
 import type { RegisterStripeCustomerPayload } from 'App/Jobs/RegisterStripeCustomer';
 
 declare module '@ioc:Setten/Queue' {
-	interface JobsList {
-		'App/Jobs/RegisterStripeCustomer': RegisterStripeCustomerPayload;
-	}
+  interface JobsList {
+    'App/Jobs/RegisterStripeCustomer': RegisterStripeCustomerPayload;
+  }
 }
 ```
