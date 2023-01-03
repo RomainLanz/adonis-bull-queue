@@ -43,7 +43,6 @@ import { Queue } from '@ioc:Setten/Queue';
 
 Queue.dispatch('App/Jobs/RegisterStripeCustomer', {...});
 
-
 Queue.dispatch('App/Jobs/RegisterStripeCustomer', {...}, {
   queueName: 'stripe',
 });
@@ -62,38 +61,40 @@ Example job file:
 
 ```ts
 // app/Jobs/RegisterStripeCustomer.ts
-import { JobHandlerContract, Job } from '@ioc:Setten/Queue'
+import type { JobHandlerContract, Job } from '@ioc:Setten/Queue';
 
 export type RegisterStripeCustomerPayload = {
-  userId: string
-}
+	userId: string;
+};
 
 export default class RegisterStripeCustomer implements JobHandlerContract {
-  constructor(public job: Job) {
-    this.job = job
-  }
+	constructor(public job: Job) {
+		this.job = job;
+	}
 
-  public async handle(payload: RegisterStripeCustomerPayload) {
-    // ...
-  }
+	public async handle(payload: RegisterStripeCustomerPayload) {
+		// ...
+	}
 
-  /**
-   * This is an optional method that gets called if it exists when the retries has exceeded and is marked failed.
-   */
-  public async failed() {}
+	/**
+	 * This is an optional method that gets called if it exists when the retries has exceeded and is marked failed.
+	 */
+	public async failed() {}
 }
 ```
 
 #### Job Attempts
+
 By default, all jobs have a retry of 3 and this is set within your `config/queue.ts` under the `jobs` object.
 
 You can also set the attempts on a call basis by passing the overide as shown below:
 
 ```ts
-Queue.dispatch('App/Jobs/Somejob', {...}, {attempts: 3})
+Queue.dispatch('App/Jobs/Somejob', {...}, { attempts: 3 })
 ```
 
 #### Delayed retries
+
 If you need to add delays inbetween retries, you can either set it globally via by adding this to your `config/queue.ts`:
 
 ```ts
@@ -111,7 +112,10 @@ If you need to add delays inbetween retries, you can either set it globally via 
 Or... you can also do it per job:
 
 ```ts
-Queue.dispatch('App/Jobs/Somejob', {...}, {attempts: 3, backoff: {type: 'exponential', delay: 5000}})
+Queue.dispatch('App/Jobs/Somejob', {...}, {
+	attempts: 3,
+	backoff: { type: 'exponential', delay: 5000 }
+})
 ```
 
 With that configuration above, BullMQ will first add a 5s delay before the first retry, 20s before the 2nd, and 40s for the 3rd.
@@ -128,6 +132,10 @@ node ace queue:listen
 # or
 
 node ace queue:listen --queue=stripe
+
+# or
+
+node ace queue:listen --queue=stripe,cloudflare
 ```
 
 Once done, you will see the message `Queue processing started`.
@@ -137,11 +145,11 @@ Once done, you will see the message `Queue processing started`.
 You can define the payload's type for a given job inside the `contracts/queue.ts` file.
 
 ```ts
-import type { RegisterStripeCustomerPayload } from 'App/Jobs/RegisterStripeCustomer'
+import type { RegisterStripeCustomerPayload } from 'App/Jobs/RegisterStripeCustomer';
 
 declare module '@ioc:Setten/Queue' {
-  interface JobsList {
-    'App/Jobs/RegisterStripeCustomer': RegisterStripeCustomerPayload;
-  }
+	interface JobsList {
+		'App/Jobs/RegisterStripeCustomer': RegisterStripeCustomerPayload;
+	}
 }
 ```
