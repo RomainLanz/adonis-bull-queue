@@ -29,20 +29,20 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "bullmq": "^3.2.2"
+    "bullmq": "^3.5.1"
   },
   "devDependencies": {
-    "@adonisjs/application": "^5.2.5",
-    "@adonisjs/core": "^5.8.4",
-    "@adonisjs/sink": "^5.3.2",
+    "@adonisjs/application": "^5.3.0",
+    "@adonisjs/core": "^5.9.0",
+    "@adonisjs/sink": "^5.4.2",
     "copyfiles": "^2.4.1",
     "del-cli": "^4.0.1",
-    "eslint": "^8.19.0",
+    "eslint": "^8.31.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-adonis": "^2.1.1",
     "eslint-plugin-prettier": "^4.2.1",
-    "prettier": "^2.7.1",
-    "typescript": "^4.7.4"
+    "prettier": "^2.8.1",
+    "typescript": "^4.9.4"
   },
   "publishConfig": {
     "tag": "latest",
