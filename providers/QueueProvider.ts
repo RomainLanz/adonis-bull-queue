@@ -13,7 +13,7 @@ export default class QueueProvider {
 
 	public boot() {
 		this.app.container.singleton('Setten/Queue', () => {
-			const config = this.app.container.resolveBinding('Adonis/Core/Config').get('queue');
+			const config = this.app.container.resolveBinding('Adonis/Core/Config').get('queue').config;
 			const logger = this.app.container.resolveBinding('Adonis/Core/Logger');
 			const application = this.app.container.resolveBinding('Adonis/Core/Application');
 

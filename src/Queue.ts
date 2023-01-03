@@ -31,7 +31,7 @@ export class BullManager {
 		options: JobsOptions & { queueName?: string } = {},
 	) {
 		const queueName = options.queueName || 'default';
-		
+
 		if (!this.queues.has(queueName)) {
 			this.queues.set(queueName, new Queue(queueName, {
 				connection: this.options.connection,
@@ -48,12 +48,12 @@ export class BullManager {
 	public process({ queueName }: { queueName?: string }) {
 		this.logger.info(`Queue [${queueName || 'default'}] processing started...`);
 
-		new Worker(
+		let worker = new Worker(
 			queueName || 'default',
 			async (job) => {
 				let jobHandler;
 				try {
-					jobHandler = this.app.container.make(job.name);
+					jobHandler = this.app.container.make(job.name, [job]);
 				} catch (e) {
 					this.logger.error(`Job handler for ${job.name} not found`);
 					return;
@@ -61,19 +61,27 @@ export class BullManager {
 
 				this.logger.info(`Job ${job.name} started`);
 
-				try {
-					await jobHandler.handle(job.data);
-					this.logger.info(`Job ${job.name} finished`);
-				} catch (error) {
-					this.logger.error(`Job ${job.name} failed`);
-					this.logger.error(JSON.stringify(error));
-				}
+				await jobHandler.handle(job.data);
+				this.logger.info(`Job ${job.name} finished`);
 			},
 			{
 				connection: this.options.connection,
 				...this.options.worker,
 			}
 		);
+
+		worker.on('failed', async (job, error) => {
+			this.logger.error(error.message, [])
+
+			// If removeOnFail is set to true in the job options, job instance may be undefined.
+			// This can occur if worker maxStalledCount has been reached and the removeOnFail is set to true.
+			if (job && (job.attemptsMade === job.opts.attempts || job.finishedOn)) {
+
+				// Call the failed method of the handler class if there is one
+				let jobHandler = this.app.container.make(job.name, [job]);
+				if (typeof jobHandler.failed === 'function') await jobHandler.failed()
+			}
+		})
 
 		return this;
 	}

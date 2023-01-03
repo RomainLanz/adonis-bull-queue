@@ -49,22 +49,76 @@ Queue.dispatch('App/Jobs/RegisterStripeCustomer', {...}, {
 });
 ```
 
-Your `Job` can be stored anywhere in your application and is dispatched using its full path.
-It must have a `handle` method that will be executed by the queue worker.
+You can create a job by running `node ace make:job {job}`.
+This will create the job within your `app/Jobs` directory.
+
+The `handle` method is what gets called when the jobs is processed while
+the `failed` method is called when the max attempts of the job has been reached.
+
+You can remove the `failed` method if you choose as the processor checks if the method exists.
+Since the job instance is passed to the constructor, you can easily send notifications with the `failed` method. See [this page](https://api.docs.bullmq.io/classes/Job.html) for full documentation on the job instance.
+
+Example job file:
 
 ```ts
 // app/Jobs/RegisterStripeCustomer.ts
+import { JobHandlerContract, Job } from '@ioc:Setten/Queue'
 
 export type RegisterStripeCustomerPayload = {
   userId: string
 }
 
-export default class RegisterStripeCustomer {
+export default class RegisterStripeCustomer implements JobHandlerContract {
+  constructor(public job: Job) {
+    this.job = job
+  }
+
   public async handle(payload: RegisterStripeCustomerPayload) {
     // ...
   }
+
+  /**
+   * This is an optional method that gets called if it exists when the retries has exceeded and is marked failed.
+   */
+  public async failed() {}
 }
 ```
+
+#### Job Attempts
+By default, all jobs have a retry of 3 and this is set within your `config/queue.ts` under the `jobs` object.
+
+You can also set the attempts on a call basis by passing the overide as shown below:
+
+```ts
+Queue.dispatch('App/Jobs/Somejob', {...}, {attempts: 3})
+```
+
+#### Delayed retries
+If you need to add delays inbetween retries, you can either set it globally via by adding this to your `config/queue.ts`:
+
+```ts
+// config/queue.ts
+  ...
+  jobs: {
+    attempts: 3,
+    backoff: {
+      type: 'exponential',
+      delay: 5000,
+    },
+  }
+```
+
+Or... you can also do it per job:
+
+```ts
+Queue.dispatch('App/Jobs/Somejob', {...}, {attempts: 3, backoff: {type: 'exponential', delay: 5000}})
+```
+
+With that configuration above, BullMQ will first add a 5s delay before the first retry, 20s before the 2nd, and 40s for the 3rd.
+
+You can visit [this page](https://docs.bullmq.io/guide/retrying-failing-jobs) on further explanation / other retry options.
+
+#### Running the queue
 
 Run the queue worker with the following ace command:
 

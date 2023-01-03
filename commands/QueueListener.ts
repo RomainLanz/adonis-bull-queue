@@ -11,8 +11,8 @@ export default class QueueListener extends BaseCommand {
 	public static commandName = 'queue:listen';
 	public static description = '';
 
-	@flags.string({ alias: 'q', description: 'The queue to listen on' })
-	public queue: string = 'default';
+	@flags.array({ alias: 'q', description: 'The queue(s) to listen on' })
+	public queue: string[] = [];
 
 	public static settings = {
 		loadApp: true,
@@ -21,9 +21,14 @@ export default class QueueListener extends BaseCommand {
 
 	public async run() {
 		const { Queue } = this.application.container.resolveBinding('Setten/Queue');
+		const Config = this.application.container.resolveBinding('Adonis/Core/Config')
 
-		await Queue.process({
-			queueName: this.queue,
-		});
+		if (this.queue.length === 0) this.queue = Config.get('queue').queueNames
+
+		await Promise.all(
+      this.queue.map(queue => Queue.process({
+        queueName: queue,
+      }))
+    )
 	}
 }
