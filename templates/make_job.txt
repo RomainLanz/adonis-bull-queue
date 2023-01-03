@@ -1,4 +1,4 @@
-import { JobHandlerContract, Job } from '@ioc:Setten/Queue'
+import type { JobHandlerContract, Job } from '@ioc:Setten/Queue'
 
 export default class Test implements JobHandlerContract {
 	constructor(public job: Job) {
@@ -7,11 +7,8 @@ export default class Test implements JobHandlerContract {
 
   /**
    * Base Entry point
-   * @param payload
    */
-  public async handle(payload: {}) {
-
-  }
+  public async handle(payload: {}) {}
 
   /**
    * This is an optional method that gets called if it exists when the retries has exceeded and is marked failed.

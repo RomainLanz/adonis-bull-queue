@@ -5,50 +5,32 @@
  * @copyright Setten
  */
 
-import { BaseCommand, args, Exception } from '@adonisjs/core/build/standalone';
-import { join } from 'path'
+import { join } from 'node:path';
+import { BaseCommand, args } from '@adonisjs/core/build/standalone';
 
 export default class MakeJob extends BaseCommand {
-  /**
-   * Command name is used to run the command
-   */
-  public static commandName = 'make:job'
+	public static commandName = 'make:job';
+	public static description = 'Make a new dispatch-able job';
 
-  /**
-   * Command description is displayed in the "help" output
-   */
-  public static description = 'Make a dispatchable job'
+	@args.string({ description: 'Name of the job class' })
+	public name: string;
 
-  @args.string()
-	public job!: string;
+	public static settings = {
+		loadApp: true,
+		stayAlive: false,
+	};
 
-  public static settings = {
-    /**
-     * Set the following value to true, if you want to load the application
-     * before running the command. Don't forget to call `node ace generate:manifest`
-     * afterwards.
-     */
-    loadApp: true,
+	public async run() {
+		const stub = join(__dirname, '..', '/templates/make_job.txt');
+		const path = this.application.resolveNamespaceDirectory('jobs');
 
-    /**
-     * Set the following value to true, if you want this command to keep running until
-     * you manually decide to exit the process. Don't forget to call
-     * `node ace generate:manifest` afterwards.
-     */
-    stayAlive: false,
-  }
+		this.generator
+			.addFile(this.name, { pattern: 'pascalcase', form: 'singular' })
+			.stub(stub)
+			.destinationDir(path || 'app/Jobs')
+			.useMustache()
+			.appRoot(this.application.cliCwd || this.application.appRoot);
 
-  public async run() {
-		if (!this.job) throw new Exception("Must supply a job name")
-
-    const stub = join(__dirname, '..', '/templates/make_job.txt')
-    const path = this.application.resolveNamespaceDirectory('jobs')
-    this.generator
-        .addFile(this.job, { pattern: 'pascalcase', form: 'singular' })
-        .stub(stub)
-        .destinationDir(path || 'app/Jobs')
-        .useMustache()
-        .appRoot(this.application.cliCwd || this.application.appRoot);
-    await this.generator.run();
-  }
+		await this.generator.run();
+	}
 }
