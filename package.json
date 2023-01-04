@@ -1,6 +1,6 @@
 {
   "name": "@setten/bull-queue",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Queue system based on BullMQ for AdonisJS",
   "homepage": "https://github.com/setten-io/adonis-bull-queue#readme",
   "license": "MIT",
