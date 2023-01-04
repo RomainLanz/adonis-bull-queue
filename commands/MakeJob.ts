@@ -29,7 +29,8 @@ export default class MakeJob extends BaseCommand {
 			.stub(stub)
 			.destinationDir(path || 'app/Jobs')
 			.useMustache()
-			.appRoot(this.application.cliCwd || this.application.appRoot);
+			.appRoot(this.application.cliCwd || this.application.appRoot)
+			.apply({ name: this.name });
 
 		await this.generator.run();
 	}
