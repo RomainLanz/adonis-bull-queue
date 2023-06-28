@@ -1,6 +1,6 @@
 {
   "name": "@rlanz/bull-queue",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Queue system based on BullMQ for AdonisJS",
   "homepage": "https://github.com/romainlanz/adonis-bull-queue#readme",
   "license": "MIT",
@@ -58,12 +58,12 @@
   "adonisjs": {
     "instructions": "./build/instructions.js",
     "instructionsMd": "./build/instructions.md",
-    "types": "@setten/bull-queue",
+    "types": "@rlanz/bull-queue",
     "providers": [
-      "@setten/bull-queue"
+      "@rlanz/bull-queue"
     ],
     "commands": [
-      "@setten/bull-queue/build/commands"
+      "@rlanz/bull-queue/build/commands"
     ],
     "templates": {
       "basePath": "./build/templates",
