@@ -1,15 +1,15 @@
 {
-  "name": "@setten/bull-queue",
+  "name": "@rlanz/bull-queue",
   "version": "1.0.1",
   "description": "Queue system based on BullMQ for AdonisJS",
-  "homepage": "https://github.com/setten-io/adonis-bull-queue#readme",
+  "homepage": "https://github.com/romainlanz/adonis-bull-queue#readme",
   "license": "MIT",
   "keywords": [
     "adonisjs",
     "bullmq",
     "queue"
   ],
-  "author": "Romain Lanz <romain.lanz@setten.io>",
+  "author": "Romain Lanz <romain.lanz@pm.me>",
   "main": "build/providers/QueueProvider.js",
   "files": [
     "build/adonis-typings",
@@ -50,10 +50,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/setten-io/adonis-bull-queue.git"
+    "url": "git+https://github.com/romainlanz/adonis-bull-queue.git"
   },
   "bugs": {
-    "url": "https://github.com/setten-io/adonis-bull-queue/issues"
+    "url": "https://github.com/romainlanz/adonis-bull-queue/issues"
   },
   "adonisjs": {
     "instructions": "./build/instructions.js",

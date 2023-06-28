@@ -1,8 +1,8 @@
 /**
- * @setten/bull-queue
+ * @rlanz/bull-queue
  *
  * @license MIT
- * @copyright Setten - Romain Lanz <romain.lanz@setten.io>
+ * @copyright Romain Lanz <romain.lanz@pm.me>
  */
 
 import { BullManager } from '../src/Queue';
@@ -12,7 +12,7 @@ export default class QueueProvider {
 	constructor(protected app: ApplicationContract) {}
 
 	public boot() {
-		this.app.container.singleton('Setten/Queue', () => {
+		this.app.container.singleton('Rlanz/Queue', () => {
 			const config = this.app.container.resolveBinding('Adonis/Core/Config').get('queue').config;
 			const logger = this.app.container.resolveBinding('Adonis/Core/Logger');
 			const application = this.app.container.resolveBinding('Adonis/Core/Application');

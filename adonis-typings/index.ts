@@ -1,11 +1,11 @@
 /**
- * @setten/bull-queue
+ * @rlanz/bull-queue
  *
  * @license MIT
- * @copyright Setten - Romain Lanz <romain.lanz@setten.io>
+ * @copyright Romain Lanz <romain.lanz@pm.me>
  */
 
-declare module '@ioc:Setten/Queue' {
+declare module '@ioc:Rlanz/Queue' {
 	import type { ConnectionOptions, WorkerOptions, QueueOptions, JobsOptions, Job } from 'bullmq';
 
 	export type DataForJob<K extends string> = K extends keyof JobsList
@@ -13,8 +13,8 @@ declare module '@ioc:Setten/Queue' {
 		: Record<string, unknown>;
 
 	export type DispatchOptions = JobsOptions & {
-		queueName?: 'default' | string
-	}
+		queueName?: 'default' | string;
+	};
 
 	export type QueueConfig = {
 		connection: ConnectionOptions;
@@ -38,8 +38,8 @@ declare module '@ioc:Setten/Queue' {
 	}
 
 	export interface JobHandlerContract {
-		handle(payload: any): Promise<void>
-		failed(): Promise<void>
+		handle(payload: any): Promise<void>;
+		failed(): Promise<void>;
 	}
 
 	/**
@@ -49,5 +49,5 @@ declare module '@ioc:Setten/Queue' {
 
 	export const Queue: QueueContract;
 
-	export { Job }
+	export { Job };
 }

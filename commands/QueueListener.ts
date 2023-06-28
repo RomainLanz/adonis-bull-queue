@@ -1,8 +1,8 @@
 /**
- * @setten/bull-queue
+ * @rlanz/bull-queue
  *
  * @license MIT
- * @copyright Setten - Romain Lanz <romain.lanz@setten.io>
+ * @copyright Romain Lanz <romain.lanz@pm.me>
  */
 
 import { BaseCommand, flags } from '@adonisjs/core/build/standalone';

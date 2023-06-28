@@ -1,4 +1,4 @@
-import type { JobHandlerContract, Job } from '@ioc:Setten/Queue'
+import type { JobHandlerContract, Job } from '@ioc:Rlanz/Queue'
 
 export type {{ name }}Payload = {}
 

@@ -1,4 +1,4 @@
-declare module '@ioc:Setten/Queue' {
+declare module '@ioc:Rlanz/Queue' {
   interface JobsList {
   }
 }
