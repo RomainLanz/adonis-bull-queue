@@ -147,7 +147,7 @@ You can define the payload's type for a given job inside the `contracts/queue.ts
 ```ts
 import type { RegisterStripeCustomerPayload } from 'App/Jobs/RegisterStripeCustomer';
 
-declare module '@ioc:Setten/Queue' {
+declare module '@ioc:Rlanz/Queue' {
   interface JobsList {
     'App/Jobs/RegisterStripeCustomer': RegisterStripeCustomerPayload;
   }

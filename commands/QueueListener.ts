@@ -20,7 +20,7 @@ export default class QueueListener extends BaseCommand {
 	};
 
 	public async run() {
-		const { Queue } = this.application.container.resolveBinding('Setten/Queue');
+		const { Queue } = this.application.container.resolveBinding('Rlanz/Queue');
 		const Config = this.application.container.resolveBinding('Adonis/Core/Config');
 
 		if (this.queue.length === 0) this.queue = Config.get('queue').queueNames;
