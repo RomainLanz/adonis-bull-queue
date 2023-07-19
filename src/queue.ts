@@ -7,11 +7,16 @@
 
 import is from '@sindresorhus/is'
 import { Queue, Worker } from 'bullmq'
-import { moduleImporter } from '@adonisjs/core/container'
 import { RuntimeException } from '@poppinss/utils'
+import { Job } from './job.js'
 import type { JobsOptions } from 'bullmq'
 import type { ApplicationService, LoggerService } from '@adonisjs/core/types'
-import type { AllowedJobTypes, JobHandlerConstructor, QueueConfig } from './types/main.js'
+import type {
+  AllowedJobTypes,
+  InferJobPayload,
+  JobHandlerConstructor,
+  QueueConfig,
+} from './types/main.js'
 
 export class QueueManager {
   #app: ApplicationService
@@ -57,7 +62,13 @@ export class QueueManager {
 
   async dispatch<Job extends AllowedJobTypes>(
     job: Job,
-    payload: any,
+    payload: Job extends JobHandlerConstructor
+      ? InferJobPayload<Job>
+      : Job extends Promise<infer A>
+      ? A extends { default: JobHandlerConstructor }
+        ? InferJobPayload<A['default']>
+        : never
+      : never,
     options: JobsOptions & { queueName?: string } = {}
   ): Promise<void> {
     const queueName = options.queueName || 'default'
@@ -87,17 +98,19 @@ export class QueueManager {
     let worker = new Worker(
       queueName || 'default',
       async (job) => {
-        let handler: any
+        let jobClassInstance: Job
 
         try {
-          handler = moduleImporter(() => import(job.name), 'handle').toCallable(this.#app.container)
+          const jobClass = await import(job.name)
+          jobClassInstance = await this.#app.container.make(jobClass)
+          jobClassInstance.$setBullMQJob(job)
         } catch (e) {
           this.#logger.error(`Job handler for ${job.name} not found`)
           return
         }
 
         this.#logger.info(`Job ${job.name} started`)
-        await handler(job.data)
+        await jobClassInstance.handle(job.data)
         this.#logger.info(`Job ${job.name} finished`)
       },
       {
@@ -113,11 +126,12 @@ export class QueueManager {
       // This can occur if worker maxStalledCount has been reached and the removeOnFail is set to true.
       if (job && (job.attemptsMade === job.opts.attempts || job.finishedOn)) {
         // Call the failed method of the handler class if there is one
-        const handler = moduleImporter(() => import(job.name), 'failed').toCallable(
-          this.#app.container
-        )
+        const jobClass = await import(job.name)
+        const jobClassInstance = (await this.#app.container.make(jobClass)) as Job
 
-        await handler()
+        jobClassInstance.$setBullMQJob(job)
+
+        await jobClassInstance.failed()
       }
     })
 
