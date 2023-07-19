@@ -9,6 +9,6 @@ charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
 
-[{package.json,.eslintrc,tsconfig.json,*.yml,*.md,*.txt}]
+[{package.json,.eslintrc,tsconfig.json,*.yml,*.md,*.txt,*.stub}]
 indent_style = space
 insert_final_newline = false

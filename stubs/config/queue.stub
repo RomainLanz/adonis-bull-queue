@@ -1,11 +1,15 @@
-import Env from '@ioc:Adonis/Core/Env'
-import type { QueueConfig } from '@ioc:Rlanz/Queue'
+---
+to: {{ app.configPath('queue.ts') }}
+---
 
-const queueConfig: QueueConfig = {
+import env from '#start/env'
+import { defineConfig } from '@rlanz/bull-queue'
+
+export default defineConfig({
   connection: {
-    host: Env.get('QUEUE_REDIS_HOST'),
-    port: Env.get('QUEUE_REDIS_PORT'),
-    password: Env.get('QUEUE_REDIS_PASSWORD'),
+    host: env.get('QUEUE_REDIS_HOST'),
+    port: env.get('QUEUE_REDIS_PORT'),
+    password: env.get('QUEUE_REDIS_PASSWORD'),
   },
 
   queue: {},
@@ -42,8 +46,4 @@ const queueConfig: QueueConfig = {
     removeOnComplete: 100,
     removeOnFail: 100
   }
-}
-
-const queueNames:['default'] = ['default']
-
-export { queueConfig as config, queueNames}
+})
