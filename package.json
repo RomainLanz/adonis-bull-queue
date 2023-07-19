@@ -22,7 +22,8 @@
     ".": "./build/index.js",
     "./commands": "./build/commands/main.js",
     "./commands/*": "./build/commands/*.js",
-    "./services/*": "./build/services/*.js"
+    "./services/*": "./build/services/*.js",
+    "./providers/queue_provider": "./build/providers/queue_provider.js"
   },
   "scripts": {
     "index:commands": "adonis-kit index build/commands",
