@@ -13,9 +13,9 @@ export async function configure(command: Configure) {
 
   // Add environment variables
   await command.defineEnvVariables({
-    QUEUE_REDIS_HOST: 'local',
-    QUEUE_REDIS_PORT: '127.0.0.1',
-    QUEUE_REDIS_PASSWORD: '6379',
+    QUEUE_REDIS_HOST: '127.0.0.1',
+    QUEUE_REDIS_PORT: '6379',
+    QUEUE_REDIS_PASSWORD: '',
   })
 
   // Add provider to rc file
