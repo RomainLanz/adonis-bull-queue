@@ -13,7 +13,7 @@ export default class QueueListener extends BaseCommand {
   static description = 'Listen to one or multiple queues'
 
   @flags.array({ alias: 'q', description: 'The queue(s) to listen on' })
-  queue: string[] = []
+  declare queue: string[]
 
   static options: CommandOptions = {
     startApp: true,
@@ -26,12 +26,14 @@ export default class QueueListener extends BaseCommand {
     const router = await this.app.container.make('router')
     router.commit()
 
-    if (this.queue.length === 0) {
-      this.queue = config.queueNames ?? ['default']
+    let shouldListenOn = this.parsed.flags.queue as string[]
+
+    if (!shouldListenOn) {
+      shouldListenOn = config.queueNames ?? ['default']
     }
 
     await Promise.all(
-      this.queue.map((queueName) =>
+      shouldListenOn.map((queueName) =>
         queue.process({
           queueName,
         })
