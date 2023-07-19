@@ -101,7 +101,7 @@ export class QueueManager {
         let jobClassInstance: Job
 
         try {
-          const jobClass = await import(job.name)
+          const { default: jobClass } = await import(job.name)
           jobClassInstance = await this.#app.container.make(jobClass)
           jobClassInstance.$setBullMQJob(job)
         } catch (e) {
@@ -126,7 +126,7 @@ export class QueueManager {
       // This can occur if worker maxStalledCount has been reached and the removeOnFail is set to true.
       if (job && (job.attemptsMade === job.opts.attempts || job.finishedOn)) {
         // Call the failed method of the handler class if there is one
-        const jobClass = await import(job.name)
+        const { default: jobClass } = await import(job.name)
         const jobClassInstance = (await this.#app.container.make(jobClass)) as Job
 
         jobClassInstance.$setBullMQJob(job)
