@@ -5,7 +5,8 @@
  * @copyright Romain Lanz <romain.lanz@pm.me>
  */
 import { BaseCommand, flags } from '@adonisjs/core/ace'
-import { QueueConfig } from '../src/types/main.js'
+import type { CommandOptions } from '@adonisjs/core/types/ace'
+import type { QueueConfig } from '../src/types/main.js'
 
 export default class QueueListener extends BaseCommand {
   static commandName = 'queue:listen'
@@ -14,9 +15,9 @@ export default class QueueListener extends BaseCommand {
   @flags.array({ alias: 'q', description: 'The queue(s) to listen on' })
   queue: string[] = []
 
-  static settings = {
-    loadApp: true,
-    stayAlive: true,
+  static options: CommandOptions = {
+    startApp: true,
+    staysAlive: true,
   }
 
   async run() {

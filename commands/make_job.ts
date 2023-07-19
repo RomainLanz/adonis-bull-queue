@@ -7,6 +7,7 @@
 
 import { BaseCommand, args } from '@adonisjs/core/ace'
 import { stubsRoot } from '../stubs/index.js'
+import type { CommandOptions } from '@adonisjs/core/types/ace'
 
 export default class MakeJob extends BaseCommand {
   static commandName = 'make:job'
@@ -15,9 +16,8 @@ export default class MakeJob extends BaseCommand {
   @args.string({ description: 'Name of the job class' })
   name!: string
 
-  static settings = {
-    loadApp: true,
-    stayAlive: false,
+  static options: CommandOptions = {
+    allowUnknownFlags: true,
   }
 
   #stubPath = 'command/main.stub'
