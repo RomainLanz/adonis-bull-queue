@@ -87,18 +87,18 @@ export class QueueManager {
     let worker = new Worker(
       queueName || 'default',
       async (job) => {
-        try {
-          const handler = moduleImporter(() => import(job.name), 'handle').toCallable(
-            this.#app.container
-          )
+        let handler: any
 
-          this.#logger.info(`Job ${job.name} started`)
-          await handler(job.data)
-          this.#logger.info(`Job ${job.name} finished`)
+        try {
+          handler = moduleImporter(() => import(job.name), 'handle').toCallable(this.#app.container)
         } catch (e) {
           this.#logger.error(`Job handler for ${job.name} not found`)
           return
         }
+
+        this.#logger.info(`Job ${job.name} started`)
+        await handler(job.data)
+        this.#logger.info(`Job ${job.name} finished`)
       },
       {
         connection: this.#options.connection,
