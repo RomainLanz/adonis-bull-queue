@@ -20,17 +20,19 @@
   ],
   "exports": {
     ".": "./build/index.js",
+    "./commands": "./build/commands/main.js",
     "./commands/*": "./build/commands/*.js",
     "./services/*": "./build/services/*.js"
   },
   "scripts": {
-    "lint": "eslint .",
-    "build": "npm run lint && npm run clean && npm run build-only && npm run copyfiles",
+    "index:commands": "adonis-kit index build/commands",
+    "build": "npm run lint && npm run clean && npm run build-only && npm run copyfiles && npm run index:commands",
     "build-only": "tsc",
     "clean": "del-cli build",
     "copyfiles": "copyfiles \"stubs/**/**/*.stub\" build",
-    "prepublishOnly": "npm run build",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "lint": "eslint .",
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "@adonisjs/core": "^6.1.5-8",
