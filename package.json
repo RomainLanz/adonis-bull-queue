@@ -1,20 +1,12 @@
 {
   "name": "@rlanz/bull-queue",
-  "version": "2.0.0-0",
   "description": "Queue system based on BullMQ for AdonisJS",
-  "homepage": "https://github.com/romainlanz/adonis-bull-queue#readme",
+  "version": "2.0.0-0",
   "engines": {
     "node": ">=18.16.0"
   },
-  "license": "MIT",
-  "type": "module",
-  "keywords": [
-    "adonisjs",
-    "bullmq",
-    "queue"
-  ],
-  "author": "Romain Lanz <romain.lanz@pm.me>",
   "main": "build/main.js",
+  "type": "module",
   "files": [
     "build/commands",
     "build/providers",
@@ -40,11 +32,6 @@
     "prepublishOnly": "npm run build",
     "format": "prettier --write ."
   },
-  "dependencies": {
-    "@poppinss/utils": "^6.5.0-3",
-    "@sindresorhus/is": "^5.5.2",
-    "bullmq": "^4.5.0"
-  },
   "devDependencies": {
     "@adonisjs/core": "^6.1.5-8",
     "@adonisjs/eslint-config": "^1.1.8",
@@ -59,13 +46,17 @@
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
   },
+  "dependencies": {
+    "@poppinss/utils": "^6.5.0-3",
+    "@sindresorhus/is": "^5.5.2",
+    "bullmq": "^4.5.0"
+  },
   "peerDependencies": {
     "@adonisjs/core": "^6.1.5-8"
   },
-  "publishConfig": {
-    "tag": "next",
-    "access": "public"
-  },
+  "author": "Romain Lanz <romain.lanz@pm.me>",
+  "license": "MIT",
+  "homepage": "https://github.com/romainlanz/adonis-bull-queue#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/romainlanz/adonis-bull-queue.git"
@@ -73,8 +64,17 @@
   "bugs": {
     "url": "https://github.com/romainlanz/adonis-bull-queue/issues"
   },
+  "keywords": [
+    "adonisjs",
+    "bullmq",
+    "queue"
+  ],
   "eslintConfig": {
     "extends": "@adonisjs/eslint-config/package"
   },
-  "prettier": "@adonisjs/prettier-config"
+  "prettier": "@adonisjs/prettier-config",
+  "publishConfig": {
+    "tag": "next",
+    "access": "public"
+  }
 }
