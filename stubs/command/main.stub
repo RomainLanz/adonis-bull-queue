@@ -1,0 +1,26 @@
+{{#var jobName = string(entity.name).removeSuffix('job').suffix('Job').toString()}}
+{{#var jobFileName = string(entity.name).removeSuffix('job').suffix('Job').snakeCase().removeExtension().ext('.ts').toString()}}
+---
+to: {{ app.relativePath(entity.path, jobFileName) }}
+---
+import { fileURLToPath } from 'node:url'
+import { Job } from '@rlanz/bull-queue'
+
+interface {{ jobName }}Payload {}
+
+export default class {{ jobName }} extends Job {
+  // This is the path to the file that is used to create the job
+  static get $$filepath() {
+    return fileURLToPath(import.meta.url)
+  }
+
+  /**
+   * Base Entry point
+   */
+  async handle(payload: {{ jobName }}Payload) {}
+
+  /**
+   * This is an optional method that gets called when the retries has exceeded and is marked failed.
+   */
+  async failed() {}
+}
