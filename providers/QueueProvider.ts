@@ -11,7 +11,7 @@ import type { ApplicationContract } from '@ioc:Adonis/Core/Application';
 export default class QueueProvider {
 	constructor(protected app: ApplicationContract) {}
 
-	public boot() {
+	public register() {
 		this.app.container.singleton('Rlanz/Queue', () => {
 			const config = this.app.container.resolveBinding('Adonis/Core/Config').get('queue').config;
 			const logger = this.app.container.resolveBinding('Adonis/Core/Logger');
