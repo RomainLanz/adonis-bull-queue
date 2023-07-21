@@ -28,12 +28,12 @@ declare module '@ioc:Rlanz/Queue' {
 			job: K,
 			payload: DataForJob<K>,
 			options?: DispatchOptions
-		): Promise<string>;
+		): Promise<Job>;
 		dispatch<K extends string>(
 			job: K,
 			payload: DataForJob<K>,
-			options?: JobsOptions
-		): Promise<string>;
+			options?: DispatchOptions
+		): Promise<Job>;
 		process(): Promise<void>;
 	}
 
