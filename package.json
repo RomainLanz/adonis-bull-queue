@@ -36,13 +36,13 @@
     "@adonisjs/core": "^5.9.0",
     "@adonisjs/sink": "^5.4.3",
     "copyfiles": "^2.4.1",
-    "del-cli": "^5.0.0",
-    "eslint": "^8.45.0",
-    "eslint-config-prettier": "^8.8.0",
+    "del-cli": "^5.1.0",
+    "eslint": "^8.51.0",
+    "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-adonis": "^2.1.1",
-    "eslint-plugin-prettier": "^4.2.1",
-    "prettier": "^2.8.8",
-    "typescript": "^5.1.6"
+    "eslint-plugin-prettier": "^5.0.0",
+    "prettier": "^3.0.3",
+    "typescript": "^5.2.2"
   },
   "publishConfig": {
     "tag": "latest",
