@@ -1,6 +1,6 @@
 {
   "name": "@rlanz/bull-queue",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Queue system based on BullMQ for AdonisJS",
   "homepage": "https://github.com/romainlanz/adonis-bull-queue#readme",
   "license": "MIT",

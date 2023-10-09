@@ -6,7 +6,7 @@
  */
 
 declare module '@ioc:Rlanz/Queue' {
-	import type { ConnectionOptions, WorkerOptions, QueueOptions, JobsOptions, Job } from 'bullmq';
+	import type { ConnectionOptions, WorkerOptions, QueueOptions, JobsOptions, Job, Queue as BullQueue } from 'bullmq';
 
 	export type DataForJob<K extends string> = K extends keyof JobsList
 		? JobsList[K]
@@ -35,6 +35,9 @@ declare module '@ioc:Rlanz/Queue' {
 			options?: DispatchOptions
 		): Promise<Job>;
 		process(): Promise<void>;
+		clear<K extends string>(queue: K): Promise<void>;
+		list(): Promise<Map<string, BullQueue>>;
+		get(): Promise<BullQueue>;
 	}
 
 	export interface JobHandlerContract {

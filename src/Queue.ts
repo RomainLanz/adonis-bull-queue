@@ -91,4 +91,30 @@ export class BullManager {
 
 		return this;
 	}
+
+	public async clear<K extends string>(queueName: K) {
+		if (!this.queues.has(queueName)) {
+			return this.logger.info(`Queue [${queueName}] doesn't exist`);
+		}
+
+		const queue = this.queues.get(queueName || 'default');
+
+		await queue!.obliterate().then(() => {
+			return this.logger.info(`Queue [${queueName}] cleared`);
+		});
+	}
+
+	public list() {
+		return this.queues;
+	}
+
+	public get<K extends string>(queueName: K) {
+		if (!this.queues.has(queueName)) {
+			return this.logger.info(`Queue [${queueName}] doesn't exist`);
+		}
+
+		return this.queues.get(queueName);
+	}
 }
+
+
