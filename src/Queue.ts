@@ -14,27 +14,7 @@ import type { DataForJob, JobsList, QueueConfig } from '@ioc:Rlanz/Queue';
 export class BullManager {
 	private queues: Map<string, Queue> = new Map();
 
-	constructor(
-		private options: QueueConfig,
-		private logger: LoggerContract,
-		private app: ApplicationContract
-	) {
-		this.queues.set(
-			'default',
-			new Queue('default', {
-				connection: this.options.connection,
-				...this.options.queue,
-			})
-		);
-	}
-
-	public dispatch<K extends keyof JobsList | string>(
-		job: K,
-		payload: DataForJob<K>,
-		options: JobsOptions & { queueName?: string } = {}
-	) {
-		const queueName = options.queueName || 'default';
-
+	private maybeAddQueue(queueName: 'default' | string): Queue {
 		if (!this.queues.has(queueName)) {
 			this.queues.set(
 				queueName,
@@ -44,8 +24,30 @@ export class BullManager {
 				})
 			);
 		}
+		return this.queues.get(queueName) as Queue;
+	}
 
-		return this.queues.get(queueName)!.add(job, payload, {
+	constructor(
+		private options: QueueConfig,
+		private logger: LoggerContract,
+		private app: ApplicationContract
+	) {
+		this.maybeAddQueue('default');
+	}
+
+	public getQueue(queueName?: 'default' | string): Queue {
+		return this.maybeAddQueue(queueName || 'default');
+	}
+
+	public dispatch<K extends keyof JobsList | string>(
+		job: K,
+		payload: DataForJob<K>,
+		options: JobsOptions & { queueName?: string } = {}
+	) {
+		const queueName = options.queueName || 'default';
+
+		const queue = this.maybeAddQueue(queueName);
+		return queue.add(job, payload, {
 			...this.options.jobs,
 			...options,
 		});
