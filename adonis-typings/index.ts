@@ -42,7 +42,10 @@ declare module '@ioc:Rlanz/Queue' {
 			options?: DispatchOptions
 		): Promise<Job>;
 		process(): Promise<void>;
-		getQueue(queueName?: 'default' | string): BullQueue;
+		clear<K extends string>(queue: K): Promise<void>;
+		list(): Promise<Map<string, BullQueue>>;
+		get(): Promise<BullQueue>;
+    getQueue(queueName?: 'default' | string): BullQueue;
 	}
 
 	export interface JobHandlerContract {
