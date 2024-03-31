@@ -1,0 +1,10 @@
+{{{
+  exports({ to: app.makePath('types/container.ts') })
+}}}
+declare module '@adonisjs/core/types' {
+  // import ExampleJob from '#jobs/example_job'
+
+  interface ContainerBindings {
+    // 'jobs.example': ExampleJob
+  }
+}

@@ -1,0 +1,22 @@
+{{{
+  exports({ to: app.makePath(`app/jobs/${ fileName }.ts`) })
+}}}
+import type { JobHandlerContract, Job } from '@rlanz/bull-queue/types'
+
+export type {{ className }}Payload = {}
+
+export default class implements JobHandlerContract {
+  constructor(public job: Job) {
+    this.job = job
+  }
+
+  /**
+   * Base Entry point
+   */
+  async handle(payload: {{ className }}Payload) {}
+
+  /**
+   * This is an optional method that gets called if it exists when the retries has exceeded and is marked failed.
+   */
+  async failed() {}
+}

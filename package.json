@@ -1,104 +1,100 @@
 {
   "name": "@rlanz/bull-queue",
-  "version": "1.0.6",
-  "description": "Queue system based on BullMQ for AdonisJS",
+  "version": "2.0.0",
+  "description": "Queue system based on BullMQ for AdonisJS v6",
   "homepage": "https://github.com/romainlanz/adonis-bull-queue#readme",
-  "license": "MIT",
+  "engines": {
+    "node": ">=20.6.0"
+  },
+  "type": "module",
+  "files": [
+    "build/src",
+    "build/providers",
+    "build/stubs",
+    "build/index.d.ts",
+    "build/configure.js",
+    "build/index.js",
+    "build/providers/queue_provider.js",
+    "build/commands"
+  ],
+  "exports": {
+    ".": "./build/index.js",
+    "./types": "./build/src/types.js",
+    "./queue_provider": "./build/providers/queue_provider.js",
+    "./commands": "./build/commands/main.js"
+  },
+  "scripts": {
+    "clean": "del-cli build",
+    "copy:templates": "copyfiles \"stubs/**/*.stub\" build",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --ext=.ts",
+    "format": "prettier --write .",
+    "quick:test": "node --import=./tsnode.esm.js --enable-source-maps bin/test.ts",
+    "pretest": "npm run lint",
+    "test": "c8 npm run quick:test",
+    "prebuild": "npm run lint && npm run clean",
+    "build": "tsc",
+    "postbuild": "npm run copy:templates && npm run index:commands",
+    "release": "np",
+    "version": "npm run build",
+    "prepublishOnly": "npm run build",
+    "index:commands": "adonis-kit index build/commands"
+  },
   "keywords": [
     "adonisjs",
     "bullmq",
     "queue"
   ],
   "author": "Romain Lanz <romain.lanz@pm.me>",
-  "main": "build/providers/QueueProvider.js",
-  "files": [
-    "build/adonis-typings",
-    "build/commands",
-    "build/providers",
-    "build/src",
-    "build/templates",
-    "build/instructions.js",
-    "build/instructions.md"
-  ],
-  "typings": "./build/adonis-typings/index.d.ts",
-  "scripts": {
-    "build": "npm run clean && npm run build-only && npm run copyfiles",
-    "build-only": "tsc",
-    "clean": "del-cli build",
-    "copyfiles": "copyfiles \"templates/**/*.txt\" \"instructions.md\" build",
-    "prepublishOnly": "npm run build"
-  },
-  "dependencies": {
-    "bullmq": "^3.15.8"
-  },
+  "license": "MIT",
   "devDependencies": {
-    "@adonisjs/application": "^5.3.0",
-    "@adonisjs/core": "^5.9.0",
-    "@adonisjs/sink": "^5.4.3",
+    "@adonisjs/assembler": "^7.2.3",
+    "@adonisjs/core": "^6.3.1",
+    "@adonisjs/eslint-config": "^1.3.0",
+    "@adonisjs/prettier-config": "^1.3.0",
+    "@adonisjs/tsconfig": "^1.3.0",
+    "@japa/assert": "^2.1.0",
+    "@japa/file-system": "^2.2.0",
+    "@japa/runner": "^3.1.1",
+    "@swc/core": "^1.4.6",
+    "@types/node": "^20.11.25",
+    "c8": "^9.1.0",
     "copyfiles": "^2.4.1",
     "del-cli": "^5.1.0",
-    "eslint": "^8.51.0",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-adonis": "^2.1.1",
-    "eslint-plugin-prettier": "^5.0.0",
-    "prettier": "^3.0.3",
-    "typescript": "^5.2.2"
+    "eslint": "^8.57.0",
+    "np": "^10.0.0",
+    "prettier": "^3.2.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.2"
+  },
+  "peerDependencies": {
+    "@adonisjs/core": "^6.3.1"
   },
   "publishConfig": {
+    "access": "public",
+    "tag": "latest"
+  },
+  "np": {
+    "message": "chore(release): %s",
     "tag": "latest",
-    "access": "public"
+    "branch": "main",
+    "anyBranch": false
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/romainlanz/adonis-bull-queue.git"
-  },
-  "bugs": {
-    "url": "https://github.com/romainlanz/adonis-bull-queue/issues"
-  },
-  "adonisjs": {
-    "instructions": "./build/instructions.js",
-    "instructionsMd": "./build/instructions.md",
-    "types": "@rlanz/bull-queue",
-    "providers": [
-      "@rlanz/bull-queue"
+  "c8": {
+    "reporter": [
+      "text",
+      "html"
     ],
-    "commands": [
-      "@rlanz/bull-queue/build/commands"
-    ],
-    "templates": {
-      "basePath": "./build/templates",
-      "contracts": [
-        {
-          "src": "contract.txt",
-          "dest": "queue"
-        }
-      ]
-    }
+    "exclude": [
+      "tests/**"
+    ]
   },
   "eslintConfig": {
-    "extends": [
-      "plugin:adonis/typescriptPackage",
-      "prettier"
-    ],
-    "plugins": [
-      "prettier"
-    ],
-    "rules": {
-      "prettier/prettier": [
-        "error",
-        {
-          "endOfLine": "auto"
-        }
-      ]
-    }
+    "extends": "@adonisjs/eslint-config/package"
   },
-  "prettier": {
-    "arrowParens": "always",
-    "printWidth": 100,
-    "quoteProps": "consistent",
-    "semi": true,
-    "singleQuote": true,
-    "trailingComma": "es5",
-    "useTabs": true
+  "prettier": "@adonisjs/prettier-config",
+  "dependencies": {
+    "bullmq": "^5.4.4",
+    "change-case": "^5.4.3"
   }
 }

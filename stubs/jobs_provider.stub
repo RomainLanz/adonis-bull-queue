@@ -1,0 +1,13 @@
+{{{
+  exports({ to: app.makePath('providers/jobs_provider.ts') })
+}}}
+import { ApplicationService } from '@adonisjs/core/types'
+
+export default class JobsProvider {
+  constructor(protected app: ApplicationService) {}
+
+  register() {
+    // Register bindings for your jobs
+    // ex: "this.app.container.bind('jobs.example', () => ExampleJob)"
+  }
+}

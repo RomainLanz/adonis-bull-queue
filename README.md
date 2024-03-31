@@ -31,7 +31,6 @@ Next, configure the package by running the following command.
 node ace configure @rlanz/bull-queue
 ```
 
-and... Voilà!
 
 ## Usage
 
@@ -48,8 +47,64 @@ Queue.dispatch('App/Jobs/RegisterStripeCustomer', {...}, {
 });
 ```
 
-You can create a job by running `node ace make:job {job}`.
-This will create the job within your `app/Jobs` directory.
+## Creating Jobs
+### 1. Create a new job by running the following command: `node ace make:job {job name}`
+
+  ```bash
+  node ace make:job Example
+  ```
+
+  This will create the job within your `app/jobs` directory.
+
+### 2. Update your `package.json` `imports` section to include the `jobs` directory:
+
+  ```json
+  "imports": {
+    "#jobs/*": "./app/jobs/*.js"
+  }
+  ```
+
+### 3. (If `types/container.ts` already existed) Add the `ContainerBindings` interface to the `types/container.ts` file:
+
+  ```ts
+  declare module '@adonisjs/core/types' {
+    // ...
+
+    export interface ContainerBindings {
+    }
+  }
+  ```
+
+### 4. Add an entry for your new job in `ContainerBindings` in `types/container.ts`:
+
+  ```ts
+  declare module '@adonisjs/core/types' {
+    // ...
+
+    import ExampleJob from 'App/Jobs/ExampleJob'
+    export interface ContainerBindings {
+      'jobs.example': ExampleJob // Replace 'example' with the name of your job
+    }
+  }
+  ```
+
+### 5. Register a binding in the `providers/jobs_provider.ts` file added by the `configure` command:
+
+  ```ts
+  import { ApplicationService } from '@adonisjs/core/types'
+  import ExampleJob from '#jobs/example_job'
+
+  export default class JobsProvider {
+    constructor(protected app: ApplicationService) {}
+
+    register() {
+      // Register bindings for your jobs
+      this.app.container.bind('jobs.example', () => ExampleJob)
+    }
+  }
+  ```
+
+
 
 The `handle` method is what gets called when the jobs is processed while
 the `failed` method is called when the max attempts of the job has been reached.
@@ -60,26 +115,21 @@ Since the job instance is passed to the constructor, you can easily send notific
 Example job file:
 
 ```ts
-// app/Jobs/RegisterStripeCustomer.ts
-import type { JobHandlerContract, Job } from '@ioc:Rlanz/Queue';
+// app/jobs/example_job.ts
+import type { JobHandlerContract, Job } from '@rlanz/bull-queue/types'
 
-export type RegisterStripeCustomerPayload = {
-  userId: string;
-};
+export type ExampleJobPayload = {}
 
-export default class RegisterStripeCustomer implements JobHandlerContract {
+export default class implements JobHandlerContract {
   constructor(public job: Job) {
-    this.job = job;
+    this.job = job
   }
 
-  public async handle(payload: RegisterStripeCustomerPayload) {
-    // ...
+  async handle(payload: ExampleJobPayload) {
+    console.log('ExampleJob:handle', payload)
   }
 
-  /**
-   * This is an optional method that gets called if it exists when the retries has exceeded and is marked failed.
-   */
-  public async failed() {}
+  async failed() {}
 }
 ```
 
@@ -112,7 +162,7 @@ If you need to add delays inbetween retries, you can either set it globally via 
 Or... you can also do it per job:
 
 ```ts
-Queue.dispatch('App/Jobs/Somejob', {...}, {
+Queue.dispatch('jobs.example', {...}, {
   attempts: 3,
   backoff: { type: 'exponential', delay: 5000 }
 })
@@ -142,14 +192,14 @@ Once done, you will see the message `Queue processing started`.
 
 ## Typings
 
-You can define the payload's type for a given job inside the `contracts/queue.ts` file.
+You can define the payload's type for a given job inside the `providers/jobs_provider.ts` file.
 
 ```ts
-import type { RegisterStripeCustomerPayload } from 'App/Jobs/RegisterStripeCustomer';
+import { ExampleJobPayload } from '#jobs/example_job'
 
-declare module '@ioc:Rlanz/Queue' {
+declare module 'Rlanz/Queue' {
   interface JobsList {
-    'App/Jobs/RegisterStripeCustomer': RegisterStripeCustomerPayload;
+    'jobs.example': ExampleJobPayload
   }
 }
 ```
