@@ -34,6 +34,7 @@
     "copyfiles": "copyfiles \"stubs/**/**/*.stub\" build",
     "format": "prettier --write .",
     "lint": "eslint .",
+    "release": "npx release-it",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
