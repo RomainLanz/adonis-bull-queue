@@ -36,6 +36,7 @@
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
+    "@adonisjs/assembler": "^7.4.0",
     "@adonisjs/core": "^6.5.0",
     "@adonisjs/eslint-config": "^1.3.0",
     "@adonisjs/prettier-config": "^1.3.0",
