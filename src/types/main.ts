@@ -14,9 +14,9 @@ export type AllowedJobTypes =
 
 export type QueueConfig = {
   queueNames?: string[]
-  connection: ConnectionOptions
-  queue: QueueOptions
-  worker: WorkerOptions
+  defaultConnection: ConnectionOptions
+  queue: Omit<QueueOptions, 'connection'> & { connection?: ConnectionOptions }
+  worker: Omit<WorkerOptions, 'connection'> & { connection?: ConnectionOptions }
   jobs: JobsOptions
 }
 

@@ -6,7 +6,7 @@
  */
 
 import { isClass } from '@sindresorhus/is'
-import { Queue, Worker } from 'bullmq'
+import { Queue, QueueOptions, Worker, WorkerOptions } from 'bullmq'
 import { RuntimeException } from '@poppinss/utils'
 import { Job } from './job.js'
 import type { JobsOptions } from 'bullmq'
@@ -30,14 +30,16 @@ export class QueueManager {
     this.#logger = logger
     this.#app = app
 
+    const computedConfig = {
+      ...this.#options.queue,
+    }
+
+    if (typeof computedConfig.connection === 'undefined') {
+      computedConfig.connection = this.#options.defaultConnection
+    }
+
     // Define the default queue
-    this.#queues.set(
-      'default',
-      new Queue('default', {
-        ...(!('connection' in this.#options.queue) && { connection: this.#options.connection }),
-        ...this.#options.queue,
-      })
-    )
+    this.#queues.set('default', new Queue('default', computedConfig as QueueOptions))
   }
 
   /**
@@ -73,14 +75,16 @@ export class QueueManager {
   ): Promise<void> {
     const queueName = options.queueName || 'default'
 
+    const computedConfig = {
+      ...this.#options.queue,
+    }
+
+    if (typeof computedConfig.connection === 'undefined') {
+      computedConfig.connection = this.#options.defaultConnection
+    }
+
     if (!this.#queues.has(queueName)) {
-      this.#queues.set(
-        queueName,
-        new Queue(queueName, {
-          ...(!('connection' in this.#options.queue) && { connection: this.#options.connection }),
-          ...this.#options.queue,
-        })
-      )
+      this.#queues.set(queueName, new Queue(queueName, computedConfig as QueueOptions))
     }
 
     const jobClass = await this.#resolveJob(job)
@@ -94,6 +98,14 @@ export class QueueManager {
 
   process({ queueName }: { queueName?: string }) {
     this.#logger.info(`Queue [${queueName || 'default'}] processing started...`)
+
+    const computedConfig = {
+      ...this.#options.worker,
+    }
+
+    if (typeof computedConfig.connection === 'undefined') {
+      computedConfig.connection = this.#options.defaultConnection
+    }
 
     let worker = new Worker(
       queueName || 'default',
@@ -113,10 +125,7 @@ export class QueueManager {
         await jobClassInstance.handle(job.data)
         this.#logger.info(`Job ${job.name} finished`)
       },
-      {
-        ...(!('connection' in this.#options.worker) && { connection: this.#options.connection }),
-        ...this.#options.worker,
-      }
+      computedConfig as WorkerOptions
     )
 
     worker.on('failed', async (job, error) => {

@@ -11,4 +11,3 @@ insert_final_newline = true
 
 [{package.json,.eslintrc,tsconfig.json,*.yml,*.md,*.txt,*.stub}]
 indent_style = space
-insert_final_newline = false

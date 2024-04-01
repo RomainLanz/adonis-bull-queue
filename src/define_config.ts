@@ -13,8 +13,10 @@ export function defineConfig<T extends QueueConfig>(config: T): T {
     throw new InvalidArgumentsException('Invalid config. It must be a valid object')
   }
 
-  if (!config.connection) {
-    throw new InvalidArgumentsException('Invalid config. Missing property "connection" inside it')
+  if (!config.defaultConnection) {
+    throw new InvalidArgumentsException(
+      'Invalid config. Missing property "defaultConnection" inside it'
+    )
   }
 
   return config
