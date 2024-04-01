@@ -21,6 +21,15 @@ export async function configure(command: Configure) {
     QUEUE_REDIS_PASSWORD: '',
   })
 
+  await codemods.defineEnvValidations({
+    variables: {
+      QUEUE_REDIS_HOST: `Env.schema.string({ format: 'host' })`,
+      QUEUE_REDIS_PORT: 'Env.schema.number()',
+      QUEUE_REDIS_PASSWORD: 'Env.schema.string.optional()',
+    },
+    leadingComment: 'Variables for @rlanz/bull-queue',
+  })
+
   // Add provider to rc file
   await codemods.updateRcFile((rcFile) => {
     rcFile.addProvider('@rlanz/bull-queue/queue_provider').addCommand('@rlanz/bull-queue/commands')
