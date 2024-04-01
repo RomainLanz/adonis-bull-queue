@@ -23,8 +23,6 @@ export async function configure(command: Configure) {
 
   // Add provider to rc file
   await codemods.updateRcFile((rcFile) => {
-    rcFile
-      .addProvider('@rlanz/bull-queue/providers/queue_provider')
-      .addCommand('@rlanz/bull-queue/commands')
+    rcFile.addProvider('@rlanz/bull-queue/queue_provider').addCommand('@rlanz/bull-queue/commands')
   })
 }

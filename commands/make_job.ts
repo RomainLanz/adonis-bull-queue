@@ -12,20 +12,17 @@ import type { CommandOptions } from '@adonisjs/core/types/ace'
 export default class MakeJob extends BaseCommand {
   static commandName = 'make:job'
   static description = 'Make a new dispatch-able job'
-
-  @args.string({ description: 'Name of the job class' })
-  name!: string
-
   static options: CommandOptions = {
     allowUnknownFlags: true,
   }
 
-  #stubPath = 'command/main.stub'
+  @args.string({ description: 'Name of the job class' })
+  declare name: string
 
   async run() {
     const codemods = await this.createCodemods()
 
-    await codemods.makeUsingStub(stubsRoot, this.#stubPath, {
+    await codemods.makeUsingStub(stubsRoot, 'command/main.stub', {
       entity: this.app.generators.createEntity(this.name),
     })
   }

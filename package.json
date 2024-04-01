@@ -5,9 +5,10 @@
   "engines": {
     "node": ">=18.16.0"
   },
-  "main": "build/main.js",
+  "main": "./build/index.js",
   "type": "module",
   "files": [
+    "src",
     "build/commands",
     "build/providers",
     "build/services",
@@ -23,7 +24,7 @@
     "./commands": "./build/commands/main.js",
     "./commands/*": "./build/commands/*.js",
     "./services/*": "./build/services/*.js",
-    "./providers/queue_provider": "./build/providers/queue_provider.js"
+    "./queue_provider": "./build/providers/queue_provider.js"
   },
   "scripts": {
     "index:commands": "adonis-kit index build/commands",
