@@ -22,54 +22,48 @@ for [AdonisJS](https://adonisjs.com/).
 This package is available in the npm registry.
 
 ```bash
-npm install @rlanz/bull-queue
+node ace add @rlanz/bull-queue
 ```
-
-Next, configure the package by running the following command.
-
-```bash
-node ace configure @rlanz/bull-queue
-```
-
-and... Voilà!
 
 ## Usage
 
-The `Queue` provider gives you access to the `dispatch` method.
+The `queue` service gives you access to the `dispatch` method.
 It will dispatch the linked job to the queue with the given payload.
 
 ```ts
-import { Queue } from '@ioc:Rlanz/Queue';
+import queue from '@rlanz/bull-queue/services/main';
 
-Queue.dispatch('App/Jobs/RegisterStripeCustomer', {...});
+Queue.dispatch(RegisterStripeCustomer, {...});
 
-Queue.dispatch('App/Jobs/RegisterStripeCustomer', {...}, {
+// You can also specify options for a specific job
+Queue.dispatch(RegisterStripeCustomer, {...}, {
   queueName: 'stripe',
 });
 ```
 
 You can create a job by running `node ace make:job {job}`.
-This will create the job within your `app/Jobs` directory.
+This will create the job within your `app/jobs` directory.
 
 The `handle` method is what gets called when the jobs is processed while
-the `failed` method is called when the max attempts of the job has been reached.
+the `rescue` method is called when the max attempts of the job has been reached.
 
-You can remove the `failed` method if you choose as the processor checks if the method exists.
-Since the job instance is passed to the constructor, you can easily send notifications with the `failed` method. See [this page](https://api.docs.bullmq.io/classes/Job.html) for full documentation on the job instance.
+You can remove the `rescue` method if you want.
+
+Since the job instance is passed to the constructor, you can easily send notifications with the `rescue` method. See [this page](https://api.docs.bullmq.io/classes/Job.html) for full documentation on the job instance.
 
 Example job file:
 
 ```ts
-// app/Jobs/RegisterStripeCustomer.ts
-import type { JobHandlerContract, Job } from '@ioc:Rlanz/Queue';
+// app/jobs/register_stripe_customer.ts
+import { Job } from '@rlanz/bull-queue'
 
-export type RegisterStripeCustomerPayload = {
+interface RegisterStripeCustomerPayload {
   userId: string;
 };
 
-export default class RegisterStripeCustomer implements JobHandlerContract {
-  constructor(public job: Job) {
-    this.job = job;
+export default class RegisterStripeCustomer extends Job {
+  static get $$filepath() {
+    return import.meta.url
   }
 
   public async handle(payload: RegisterStripeCustomerPayload) {
@@ -79,7 +73,7 @@ export default class RegisterStripeCustomer implements JobHandlerContract {
   /**
    * This is an optional method that gets called if it exists when the retries has exceeded and is marked failed.
    */
-  public async failed() {}
+  public async rescue() {}
 }
 ```
 
@@ -87,32 +81,37 @@ export default class RegisterStripeCustomer implements JobHandlerContract {
 
 By default, all jobs have a retry of 3 and this is set within your `config/queue.ts` under the `jobs` object.
 
-You can also set the attempts on a call basis by passing the overide as shown below:
+You can also set the attempts on a call basis by passing the override as shown below:
 
 ```ts
-Queue.dispatch('App/Jobs/Somejob', {...}, { attempts: 3 })
+queue.dispatch(SomeJob, {...}, { attempts: 3 })
 ```
 
 #### Delayed retries
 
-If you need to add delays inbetween retries, you can either set it globally via by adding this to your `config/queue.ts`:
+If you need to add delays between retries, you can either set it globally via by adding this to your `config/queue.ts`:
 
 ```ts
 // config/queue.ts
-  ...
+import { defineConfig } from '@rlanz/bull-queue'
+
+export default defineConfig({
+  // ...
+
   jobs: {
     attempts: 3,
     backoff: {
       type: 'exponential',
       delay: 5000,
-    },
+    }
   }
+})
 ```
 
 Or... you can also do it per job:
 
 ```ts
-Queue.dispatch('App/Jobs/Somejob', {...}, {
+Queue.dispatch(Somejob, {...}, {
   attempts: 3,
   backoff: { type: 'exponential', delay: 5000 }
 })
@@ -139,17 +138,3 @@ node ace queue:listen --queue=stripe,cloudflare
 ```
 
 Once done, you will see the message `Queue processing started`.
-
-## Typings
-
-You can define the payload's type for a given job inside the `contracts/queue.ts` file.
-
-```ts
-import type { RegisterStripeCustomerPayload } from 'App/Jobs/RegisterStripeCustomer';
-
-declare module '@ioc:Rlanz/Queue' {
-  interface JobsList {
-    'App/Jobs/RegisterStripeCustomer': RegisterStripeCustomerPayload;
-  }
-}
-```
