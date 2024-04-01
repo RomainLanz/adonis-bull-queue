@@ -5,7 +5,7 @@
  * @copyright Romain Lanz <romain.lanz@pm.me>
  */
 
-import is from '@sindresorhus/is'
+import { isClass } from '@sindresorhus/is'
 import { Queue, Worker } from 'bullmq'
 import { RuntimeException } from '@poppinss/utils'
 import { Job } from './job.js'
@@ -34,7 +34,7 @@ export class QueueManager {
     this.#queues.set(
       'default',
       new Queue('default', {
-        connection: this.#options.connection,
+        ...(!('connection' in this.#options.queue) && { connection: this.#options.connection }),
         ...this.#options.queue,
       })
     )
@@ -44,7 +44,7 @@ export class QueueManager {
    *
    */
   async #resolveJob(job: AllowedJobTypes): Promise<JobHandlerConstructor> {
-    if (is.class_(job)) {
+    if (isClass(job)) {
       return job
     }
 
@@ -65,10 +65,10 @@ export class QueueManager {
     payload: Job extends JobHandlerConstructor
       ? InferJobPayload<Job>
       : Job extends Promise<infer A>
-      ? A extends { default: JobHandlerConstructor }
-        ? InferJobPayload<A['default']>
-        : never
-      : never,
+        ? A extends { default: JobHandlerConstructor }
+          ? InferJobPayload<A['default']>
+          : never
+        : never,
     options: JobsOptions & { queueName?: string } = {}
   ): Promise<void> {
     const queueName = options.queueName || 'default'
@@ -77,7 +77,7 @@ export class QueueManager {
       this.#queues.set(
         queueName,
         new Queue(queueName, {
-          connection: this.#options.connection,
+          ...(!('connection' in this.#options.queue) && { connection: this.#options.connection }),
           ...this.#options.queue,
         })
       )
@@ -114,7 +114,7 @@ export class QueueManager {
         this.#logger.info(`Job ${job.name} finished`)
       },
       {
-        connection: this.#options.connection,
+        ...(!('connection' in this.#options.worker) && { connection: this.#options.connection }),
         ...this.#options.worker,
       }
     )
@@ -131,7 +131,7 @@ export class QueueManager {
 
         jobClassInstance.$setBullMQJob(job)
 
-        await jobClassInstance.failed()
+        await jobClassInstance.rescue()
       }
     })
 

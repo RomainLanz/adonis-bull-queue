@@ -1,8 +1,10 @@
 {{#var jobName = string(entity.name).removeSuffix('job').suffix('Job').toString()}}
 {{#var jobFileName = string(entity.name).removeSuffix('job').suffix('Job').snakeCase().removeExtension().ext('.ts').toString()}}
----
-to: {{ app.relativePath(entity.path, jobFileName) }}
----
+{{{
+  exports({
+    to: app.relativePath(entity.path, jobFileName)
+  })
+}}}
 import { fileURLToPath } from 'node:url'
 import { Job } from '@rlanz/bull-queue'
 
@@ -22,5 +24,5 @@ export default class {{ jobName }} extends Job {
   /**
    * This is an optional method that gets called when the retries has exceeded and is marked failed.
    */
-  async failed() {}
+  async rescue() {}
 }

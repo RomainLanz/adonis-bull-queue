@@ -23,6 +23,6 @@ export abstract class Job {
     return this.#bullMqJob.failedReason
   }
 
-  abstract handle(payload: any): Promise<void>
-  abstract failed(): Promise<void>
+  abstract handle(payload: unknown): Promise<void>
+  abstract rescue(): Promise<void>
 }
