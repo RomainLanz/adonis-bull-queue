@@ -1,7 +1,7 @@
 {
   "name": "@rlanz/bull-queue",
   "description": "Queue system based on BullMQ for AdonisJS",
-  "version": "2.0.0-6",
+  "version": "2.0.0-7",
   "engines": {
     "node": ">=18.16.0"
   },
