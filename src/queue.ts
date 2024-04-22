@@ -72,7 +72,7 @@ export class QueueManager {
           : never
         : never,
     options: JobsOptions & { queueName?: string } = {}
-  ): Promise<void> {
+  ) {
     const queueName = options.queueName || 'default'
 
     const computedConfig = {
@@ -90,7 +90,7 @@ export class QueueManager {
     const jobClass = await this.#resolveJob(job)
     const jobPath = this.#getJobPath(jobClass)
 
-    await this.#queues.get(queueName)!.add(jobPath, payload, {
+    return this.#queues.get(queueName)!.add(jobPath, payload, {
       ...this.#options.jobs,
       ...options,
     })
