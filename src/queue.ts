@@ -117,7 +117,8 @@ export class QueueManager {
           jobClassInstance = await this.#app.container.make(jobClass)
           jobClassInstance.$setBullMQJob(job)
         } catch (e) {
-          this.#logger.error(`Job handler for ${job.name} not found`)
+          this.#logger.error(`Job ${job.name} was not able to be created`)
+          this.#logger.error(e)
           return
         }
 
