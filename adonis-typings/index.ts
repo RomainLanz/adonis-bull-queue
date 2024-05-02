@@ -18,8 +18,8 @@ declare module '@ioc:Rlanz/Queue' {
 
 	export type QueueConfig = {
 		connection: ConnectionOptions;
-		queue: QueueOptions;
-		worker: WorkerOptions;
+		queue: Omit<QueueOptions, 'connection'>;
+		worker: Omit<WorkerOptions, 'connection'>;
 		jobs: JobsOptions;
 	};
 
