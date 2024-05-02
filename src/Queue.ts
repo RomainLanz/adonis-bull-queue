@@ -62,7 +62,7 @@ export class BullManager {
 				try {
 					jobHandler = this.app.container.make(job.name, [job]);
 				} catch (e) {
-					this.logger.error(`Job handler for ${job.name} not found`);
+					this.logger.error(e, `Job handler for ${job.name} failed to load`);
 					return;
 				}
 
