@@ -31,9 +31,7 @@ export class BullManager {
 		private options: QueueConfig,
 		private logger: LoggerContract,
 		private app: ApplicationContract
-	) {
-		this.maybeAddQueue('default');
-	}
+	) {}
 
 	public dispatch<K extends keyof JobsList | string>(
 		job: K,
