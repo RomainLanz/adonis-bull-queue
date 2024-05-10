@@ -117,4 +117,11 @@ export class BullManager {
 	public getOrSet(queueName: string): Queue {
 		return this.maybeAddQueue(queueName);
 	}
+
+	public async closeAll() {
+		for (const [queueName, queue] of this.queues.entries()) {
+			await queue.close();
+			this.queues.delete(queueName);
+		}
+	}
 }
