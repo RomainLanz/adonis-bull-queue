@@ -141,7 +141,7 @@ export class QueueManager {
 
         jobClassInstance.$setBullMQJob(job)
 
-        await jobClassInstance.rescue()
+        await jobClassInstance.rescue(job.data)
       }
     })
 
