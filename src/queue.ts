@@ -147,4 +147,16 @@ export class QueueManager {
 
     return this
   }
+
+  async clear(queueName?: string) {
+    const queue = this.#queues.get(queueName || 'default')
+
+    if (!queue) {
+      return this.#logger.error(`Queue [${queueName || 'default'}] not found`)
+    }
+
+    await queue.obliterate()
+
+    return this.#logger.info(`Queue [${queueName || 'default'}] cleared`)
+  }
 }
