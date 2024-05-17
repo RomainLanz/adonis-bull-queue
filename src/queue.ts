@@ -172,4 +172,11 @@ export class QueueManager {
 
     return this.#logger.info(`Queue [${queueName}] cleared`)
   }
+
+  async closeAll() {
+    for (const [queueName, queue] of this.#queues.entries()) {
+      await queue.close()
+      this.#queues.delete(queueName)
+    }
+  }
 }
