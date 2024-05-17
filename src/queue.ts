@@ -62,19 +62,7 @@ export class QueueManager {
     return job['$$filepath']
   }
 
-  async dispatch<Job extends AllowedJobTypes>(
-    job: Job,
-    payload: Job extends JobHandlerConstructor
-      ? InferJobPayload<Job>
-      : Job extends Promise<infer A>
-        ? A extends { default: JobHandlerConstructor }
-          ? InferJobPayload<A['default']>
-          : never
-        : never,
-    options: JobsOptions & { queueName?: string } = {}
-  ) {
-    const queueName = options.queueName || 'default'
-
+  #maybeAddQueue(queueName = 'default') {
     const computedConfig = {
       ...this.#options.queue,
     }
@@ -87,10 +75,27 @@ export class QueueManager {
       this.#queues.set(queueName, new Queue(queueName, computedConfig as QueueOptions))
     }
 
+    return this.#queues.get(queueName)!
+  }
+
+  async dispatch<Job extends AllowedJobTypes>(
+    job: Job,
+    payload: Job extends JobHandlerConstructor
+      ? InferJobPayload<Job>
+      : Job extends Promise<infer A>
+        ? A extends { default: JobHandlerConstructor }
+          ? InferJobPayload<A['default']>
+          : never
+        : never,
+    options: JobsOptions & { queueName?: string } = {}
+  ) {
+    const queueName = options.queueName || 'default'
+    const queue = this.#maybeAddQueue(queueName)
+
     const jobClass = await this.#resolveJob(job)
     const jobPath = this.#getJobPath(jobClass)
 
-    return this.#queues.get(queueName)!.add(jobPath, payload, {
+    return queue.add(jobPath, payload, {
       ...this.#options.jobs,
       ...options,
     })
@@ -148,15 +153,23 @@ export class QueueManager {
     return this
   }
 
-  async clear(queueName?: string) {
-    const queue = this.#queues.get(queueName || 'default')
+  get(queueName = 'default') {
+    return this.#queues.get(queueName)
+  }
+
+  getOrSet(queueName = 'default') {
+    return this.#maybeAddQueue(queueName)
+  }
+
+  async clear(queueName = 'default') {
+    const queue = this.#queues.get(queueName)
 
     if (!queue) {
-      return this.#logger.error(`Queue [${queueName || 'default'}] not found`)
+      return this.#logger.error(`Queue [${queueName}] not found`)
     }
 
     await queue.obliterate()
 
-    return this.#logger.info(`Queue [${queueName || 'default'}] cleared`)
+    return this.#logger.info(`Queue [${queueName}] cleared`)
   }
 }
