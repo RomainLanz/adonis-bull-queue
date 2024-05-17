@@ -9,6 +9,8 @@ import { BullManager } from '../src/Queue';
 import type { ApplicationContract } from '@ioc:Adonis/Core/Application';
 
 export default class QueueProvider {
+	private queue: BullManager | null = null;
+
 	constructor(protected app: ApplicationContract) {}
 
 	public register() {
@@ -17,9 +19,20 @@ export default class QueueProvider {
 			const logger = this.app.container.resolveBinding('Adonis/Core/Logger');
 			const application = this.app.container.resolveBinding('Adonis/Core/Application');
 
+			const Queue = new BullManager(config, logger, application);
+			this.queue = Queue;
 			return {
-				Queue: new BullManager(config, logger, application),
+				Queue,
 			};
 		});
+	}
+
+	/**
+	 * Gracefully shutdown connections when app goes down.
+	 */
+	public async shutdown() {
+		if (this.queue) {
+			await this.queue.closeAll();
+		}
 	}
 }

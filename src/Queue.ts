@@ -5,8 +5,8 @@
  * @copyright Romain Lanz <romain.lanz@pm.me>
  */
 
-import { Queue, Worker } from 'bullmq';
 import type { JobsOptions } from 'bullmq';
+import { Queue, Worker } from 'bullmq';
 import type { LoggerContract } from '@ioc:Adonis/Core/Logger';
 import type { ApplicationContract } from '@ioc:Adonis/Core/Application';
 import type { DataForJob, JobsList, QueueConfig } from '@ioc:Rlanz/Queue';
@@ -14,27 +14,7 @@ import type { DataForJob, JobsList, QueueConfig } from '@ioc:Rlanz/Queue';
 export class BullManager {
 	private queues: Map<string, Queue> = new Map();
 
-	constructor(
-		private options: QueueConfig,
-		private logger: LoggerContract,
-		private app: ApplicationContract
-	) {
-		this.queues.set(
-			'default',
-			new Queue('default', {
-				connection: this.options.connection,
-				...this.options.queue,
-			})
-		);
-	}
-
-	public dispatch<K extends keyof JobsList | string>(
-		job: K,
-		payload: DataForJob<K>,
-		options: JobsOptions & { queueName?: string } = {}
-	) {
-		const queueName = options.queueName || 'default';
-
+	private maybeAddQueue(queueName: 'default' | string): Queue {
 		if (!this.queues.has(queueName)) {
 			this.queues.set(
 				queueName,
@@ -44,8 +24,24 @@ export class BullManager {
 				})
 			);
 		}
+		return this.queues.get(queueName) as Queue;
+	}
 
-		return this.queues.get(queueName)!.add(job, payload, {
+	constructor(
+		private options: QueueConfig,
+		private logger: LoggerContract,
+		private app: ApplicationContract
+	) {}
+
+	public dispatch<K extends keyof JobsList | string>(
+		job: K,
+		payload: DataForJob<K>,
+		options: JobsOptions & { queueName?: string } = {}
+	) {
+		const queueName = options.queueName || 'default';
+
+		const queue = this.maybeAddQueue(queueName);
+		return queue.add(job, payload, {
 			...this.options.jobs,
 			...options,
 		});
@@ -62,7 +58,7 @@ export class BullManager {
 				try {
 					jobHandler = this.app.container.make(job.name, [job]);
 				} catch (e) {
-					this.logger.error(`Job handler for ${job.name} not found`);
+					this.logger.error(e, `Job handler for ${job.name} failed to load`);
 					return;
 				}
 
@@ -92,7 +88,7 @@ export class BullManager {
 		return this;
 	}
 
-	public async clear<K extends string>(queueName: K) {
+	public async clear(queueName: string) {
 		if (!this.queues.has(queueName)) {
 			return this.logger.info(`Queue [${queueName}] doesn't exist`);
 		}
@@ -108,13 +104,22 @@ export class BullManager {
 		return this.queues;
 	}
 
-	public get<K extends string>(queueName: K) {
+	public get(queueName: string) {
 		if (!this.queues.has(queueName)) {
 			return this.logger.info(`Queue [${queueName}] doesn't exist`);
 		}
 
 		return this.queues.get(queueName);
 	}
+
+	public getOrSet(queueName: string): Queue {
+		return this.maybeAddQueue(queueName);
+	}
+
+	public async closeAll() {
+		for (const [queueName, queue] of this.queues.entries()) {
+			await queue.close();
+			this.queues.delete(queueName);
+		}
+	}
 }
-
-

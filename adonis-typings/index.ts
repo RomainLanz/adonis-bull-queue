@@ -18,8 +18,8 @@ declare module '@ioc:Rlanz/Queue' {
 
 	export type QueueConfig = {
 		connection: ConnectionOptions;
-		queue: QueueOptions;
-		worker: WorkerOptions;
+		queue: Omit<QueueOptions, 'connection'>;
+		worker: Omit<WorkerOptions, 'connection'>;
 		jobs: JobsOptions;
 	};
 
@@ -35,9 +35,9 @@ declare module '@ioc:Rlanz/Queue' {
 			options?: DispatchOptions
 		): Promise<Job>;
 		process(): Promise<void>;
-		clear<K extends string>(queue: K): Promise<void>;
-		list(): Promise<Map<string, BullQueue>>;
-		get(): Promise<BullQueue>;
+		clear(queue: string): Promise<void>;
+		list(): Map<string, BullQueue>;
+		get(queueName: string): BullQueue | undefined;
 	}
 
 	export interface JobHandlerContract {
