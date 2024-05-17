@@ -9,10 +9,9 @@
 </p>
 
 `@rlanz/bull-queue` is a queue system based on [BullMQ](https://github.com/taskforcesh/bullmq)
-for [AdonisJS](https://adonisjs.com/).
+for [AdonisJS](https://adonisjs.com/). For the AdonisJS 6 releases, check out the [`next`](https://github.com/RomainLanz/adonis-bull-queue/tree/next) branch.
 
-> **Note**
->
+> [!NOTE]>
 > You must have a Redis server running on your machine.
 
 ---
