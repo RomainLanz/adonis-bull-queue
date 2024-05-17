@@ -26,6 +26,7 @@
     "build-only": "tsc",
     "clean": "del-cli build",
     "copyfiles": "copyfiles \"templates/**/*.txt\" \"instructions.md\" build",
+    "release": "npx release-it",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
@@ -42,6 +43,7 @@
     "eslint-plugin-adonis": "^2.1.1",
     "eslint-plugin-prettier": "^5.0.0",
     "prettier": "^3.0.3",
+    "release-it": "^17.2.1",
     "typescript": "^5.2.2"
   },
   "publishConfig": {
@@ -54,6 +56,18 @@
   },
   "bugs": {
     "url": "https://github.com/romainlanz/adonis-bull-queue/issues"
+  },
+  "release-it": {
+    "git": {
+      "commitMessage": "chore(release): ${version}",
+      "tagAnnotation": "v${version}",
+      "tagName": "v${version}"
+    },
+    "github": {
+      "release": true,
+      "releaseName": "v${version}",
+      "web": true
+    }
   },
   "adonisjs": {
     "instructions": "./build/instructions.js",
