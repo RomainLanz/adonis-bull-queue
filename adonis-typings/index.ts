@@ -6,51 +6,58 @@
  */
 
 declare module '@ioc:Rlanz/Queue' {
-	import type { ConnectionOptions, WorkerOptions, QueueOptions, JobsOptions, Job, Queue as BullQueue } from 'bullmq';
+  import type {
+    ConnectionOptions,
+    WorkerOptions,
+    QueueOptions,
+    JobsOptions,
+    Job,
+    Queue as BullQueue,
+  } from 'bullmq'
 
-	export type DataForJob<K extends string> = K extends keyof JobsList
-		? JobsList[K]
-		: Record<string, unknown>;
+  export type DataForJob<K extends string> = K extends keyof JobsList
+    ? JobsList[K]
+    : Record<string, unknown>
 
-	export type DispatchOptions = JobsOptions & {
-		queueName?: 'default' | string;
-	};
+  export type DispatchOptions = JobsOptions & {
+    queueName?: 'default' | string
+  }
 
-	export type QueueConfig = {
-		connection: ConnectionOptions;
-		queue: Omit<QueueOptions, 'connection'>;
-		worker: Omit<WorkerOptions, 'connection'>;
-		jobs: JobsOptions;
-	};
+  export type QueueConfig = {
+    connection: ConnectionOptions
+    queue: Omit<QueueOptions, 'connection'>
+    worker: Omit<WorkerOptions, 'connection'>
+    jobs: JobsOptions
+  }
 
-	interface QueueContract {
-		dispatch<K extends keyof JobsList>(
-			job: K,
-			payload: DataForJob<K>,
-			options?: DispatchOptions
-		): Promise<Job>;
-		dispatch<K extends string>(
-			job: K,
-			payload: DataForJob<K>,
-			options?: DispatchOptions
-		): Promise<Job>;
-		process(): Promise<void>;
-		clear(queue: string): Promise<void>;
-		list(): Map<string, BullQueue>;
-		get(queueName: string): BullQueue | undefined;
-	}
+  interface QueueContract {
+    dispatch<K extends keyof JobsList>(
+      job: K,
+      payload: DataForJob<K>,
+      options?: DispatchOptions
+    ): Promise<Job>
+    dispatch<K extends string>(
+      job: K,
+      payload: DataForJob<K>,
+      options?: DispatchOptions
+    ): Promise<Job>
+    process(queue: string): Promise<void>
+    clear(queue: string): Promise<void>
+    list(): Map<string, BullQueue>
+    get(queueName: string): BullQueue | undefined
+  }
 
-	export interface JobHandlerContract {
-		handle(payload: any): Promise<void>;
-		failed(): Promise<void>;
-	}
+  export interface JobHandlerContract {
+    handle(payload: any): Promise<void>
+    failed(): Promise<void>
+  }
 
-	/**
-	 * An interface to define typed queues/jobs
-	 */
-	export interface JobsList {}
+  /**
+   * An interface to define typed queues/jobs
+   */
+  export interface JobsList {}
 
-	export const Queue: QueueContract;
+  export const Queue: QueueContract
 
-	export { Job };
+  export { Job }
 }
