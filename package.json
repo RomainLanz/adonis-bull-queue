@@ -92,7 +92,7 @@
   },
   "prettier": "@adonisjs/prettier-config",
   "publishConfig": {
-    "tag": "next",
+    "tag": "latest",
     "access": "public"
   }
 }
