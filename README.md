@@ -32,10 +32,10 @@ It will dispatch the linked job to the queue with the given payload.
 ```ts
 import queue from '@rlanz/bull-queue/services/main';
 
-Queue.dispatch(RegisterStripeCustomer, {...});
+queue.dispatch(RegisterStripeCustomer, {...});
 
 // You can also specify options for a specific job
-Queue.dispatch(RegisterStripeCustomer, {...}, {
+queue.dispatch(RegisterStripeCustomer, {...}, {
   queueName: 'stripe',
 });
 ```
@@ -50,7 +50,7 @@ You can remove the `rescue` method if you want.
 
 Since the job instance is passed to the constructor, you can easily send notifications with the `rescue` method. See [this page](https://api.docs.bullmq.io/classes/Job.html) for full documentation on the job instance.
 
-Example job file:
+**Example job file:**
 
 ```ts
 // app/jobs/register_stripe_customer.ts
@@ -72,7 +72,7 @@ export default class RegisterStripeCustomer extends Job {
   /**
    * This is an optional method that gets called if it exists when the retries has exceeded and is marked failed.
    */
-  public async rescue() {}
+  public async rescue(payload: RegisterStripeCustomerPayload) {}
 }
 ```
 
@@ -110,7 +110,7 @@ export default defineConfig({
 Or... you can also do it per job:
 
 ```ts
-Queue.dispatch(Somejob, {...}, {
+queue.dispatch(Somejob, {...}, {
   attempts: 3,
   backoff: { type: 'exponential', delay: 5000 }
 })
