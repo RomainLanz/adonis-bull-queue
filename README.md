@@ -11,8 +11,7 @@
 `@rlanz/bull-queue` is a queue system based on [BullMQ](https://github.com/taskforcesh/bullmq)
 for [AdonisJS](https://adonisjs.com/).
 
-> **Note**
->
+> [!NOTE]
 > You must have a Redis server running on your machine.
 
 ---
