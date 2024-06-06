@@ -39,5 +39,5 @@ export abstract class Job {
   }
 
   abstract handle(payload: unknown): Promise<void>
-  abstract rescue(payload: unknown): Promise<void>
+  abstract rescue(payload: unknown, error: Error): Promise<void>
 }
