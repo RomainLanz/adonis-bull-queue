@@ -1,10 +1,25 @@
 import { Job as BullMQJob } from 'bullmq'
+import type { LoggerService } from '@adonisjs/core/types'
+
+interface InternalToInject {
+  job: BullMQJob
+  logger: LoggerService
+}
 
 export abstract class Job {
+  declare logger: LoggerService
   #bullMqJob!: BullMQJob
+  #injected = false
 
-  $setBullMQJob(job: BullMQJob) {
-    this.#bullMqJob = job
+  $injectInternal(internals: InternalToInject) {
+    if (this.#injected) {
+      return
+    }
+
+    this.#bullMqJob = internals.job
+    this.logger = internals.logger
+
+    this.#injected = true
   }
 
   getId(): string | undefined {

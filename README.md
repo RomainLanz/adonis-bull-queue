@@ -72,7 +72,7 @@ export default class RegisterStripeCustomer extends Job {
   /**
    * This is an optional method that gets called if it exists when the retries has exceeded and is marked failed.
    */
-  public async rescue(payload: RegisterStripeCustomerPayload) {}
+  public async rescue(payload: RegisterStripeCustomerPayload, error: Error) {}
 }
 ```
 

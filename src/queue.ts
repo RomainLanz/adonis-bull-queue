@@ -120,7 +120,7 @@ export class QueueManager {
         try {
           const { default: jobClass } = await import(job.name)
           jobClassInstance = await this.#app.container.make(jobClass)
-          jobClassInstance.$setBullMQJob(job)
+          jobClassInstance.$injectInternal({ job, logger: this.#logger })
         } catch (e) {
           this.#logger.error(`Job ${job.name} was not able to be created`)
           this.#logger.error(e)
@@ -128,7 +128,7 @@ export class QueueManager {
         }
 
         this.#logger.info(`Job ${job.name} started`)
-        await jobClassInstance.handle(job.data)
+        await this.#app.container.call(jobClassInstance, 'handle', [job.data])
         this.#logger.info(`Job ${job.name} finished`)
       },
       computedConfig as WorkerOptions
@@ -144,9 +144,9 @@ export class QueueManager {
         const { default: jobClass } = await import(job.name)
         const jobClassInstance = (await this.#app.container.make(jobClass)) as Job
 
-        jobClassInstance.$setBullMQJob(job)
+        jobClassInstance.$injectInternal({ job, logger: this.#logger })
 
-        await jobClassInstance.rescue(job.data)
+        await this.#app.container.call(jobClassInstance, 'rescue', [job.data, error])
       }
     })
 
