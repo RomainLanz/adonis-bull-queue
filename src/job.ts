@@ -22,6 +22,10 @@ export abstract class Job {
     this.#injected = true
   }
 
+  getJob(): BullMQJob {
+    return this.#bullMqJob
+  }
+
   getId(): string | undefined {
     return this.#bullMqJob.id
   }
