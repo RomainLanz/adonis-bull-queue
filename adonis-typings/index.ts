@@ -41,10 +41,12 @@ declare module '@ioc:Rlanz/Queue' {
       payload: DataForJob<K>,
       options?: DispatchOptions
     ): Promise<Job>
-    process(queue: string): Promise<void>
+    process(options: { queueName?: string }): this
     clear(queue: string): Promise<void>
     list(): Map<string, BullQueue>
     get(queueName: string): BullQueue | undefined
+		getOrSet(queueName: string): BullQueue
+		closeAll(): Promise<void>
   }
 
   export interface JobHandlerContract {
