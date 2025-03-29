@@ -133,7 +133,7 @@ node ace queue:listen --queue=stripe
 
 # or
 
-node ace queue:listen --queue=stripe,cloudflare
+node ace queue:listen --queue=stripe --queue=cloudflare
 ```
 
 Once done, you will see the message `Queue processing started`.
