@@ -48,7 +48,7 @@ the `rescue` method is called when the max attempts of the job has been reached.
 
 You can remove the `rescue` method if you want.
 
-Since the job instance is passed to the constructor, you can easily send notifications with the `rescue` method. See [this page](https://api.docs.bullmq.io/classes/Job.html) for full documentation on the job instance.
+Since the job instance is passed to the constructor, you can easily send notifications with the `rescue` method. See [this page](https://api.docs.bullmq.io/classes/v5.Job.html) for full documentation on the job instance.
 
 **Example job file:**
 
