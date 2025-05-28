@@ -137,3 +137,27 @@ node ace queue:listen --queue=stripe,cloudflare
 ```
 
 Once done, you will see the message `Queue processing started`.
+
+#### Listening to Custom Queues Automatically
+
+If you dispatch jobs to custom queues (e.g. `FooBarQueue`), and you want `node ace queue:listen` to listen for those jobs **without passing \`--queue\`**, you can configure this in your \`config/queue.ts\`:
+
+```ts
+// config/queue.ts
+import { defineConfig } from '@rlanz/bull-queue'
+
+export default defineConfig({
+  defaultConnection: {
+    ...
+  },
+
+  ...
+
+  queueNames: ['FooBarQueue'], // 👈 Register custom queues here
+
+  ...
+})
+```
+
+Now running \`node ace queue:listen\` will automatically process jobs dispatched to \`FooBarQueue\` without needing to specify \`--queue\`.
+
