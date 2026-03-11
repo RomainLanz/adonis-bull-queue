@@ -58,7 +58,7 @@
     "bullmq": "^5.7.14"
   },
   "peerDependencies": {
-    "@adonisjs/core": "^6.5.0"
+    "@adonisjs/core": "^6.5.0 || ^7.0.0"
   },
   "author": "Romain Lanz <romain.lanz@pm.me>",
   "license": "MIT",
